@@ -1,0 +1,33 @@
+{
+  "schemas": [ "urn:ietf:params:scim:api:messages:2.0:ListResponse" ],
+  "totalResults": 1,
+  "startIndex": 1,
+  "itemsPerPage": 100,
+  "Resources": [
+    {
+      "schemas": [
+        "urn:ietf:params:scim:schemas:core:2.0:Schema"
+      ],
+      "id": "urn:ietf:params:scim:schemas:ice:2.0:Users",
+      "description": "ICE Research parameters.",
+      "name": "IceUsers",
+      "attributes": [
+        {
+          "name": "iceCream",
+          "type": "string",
+          "multiValued": false,
+          "description": "Favorite Ice Cream",
+          "required": true,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "always",
+          "uniqueness": "none"
+        }
+      ],
+      "meta": {
+        "resourceType": "Schema",
+        "location": "/scim/v2/Schemas/urn:ietf:params:scim:schemas:ice:2.0:Users"
+      }
+    }
+  ]
+}

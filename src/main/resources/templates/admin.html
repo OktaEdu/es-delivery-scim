@@ -1,0 +1,133 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Okta ICE Research</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+</head>
+<body>
+    <nav class="nav-extended">
+        <div class="nav-wrapper">
+            <a href="#" class="brand-logo right"><img th:src="@{/ice-logo.png}" /> Ice Research</a>
+        </div>
+        <div class="nav-content">
+            <ul class="tabs tabs-transparent">
+                <li class="tab"><a href="#users" class="active tooltipped" data-position="bottom" data-delay="50" data-tooltip="Users"><i class="material-icons">person</i>Users</a></li>
+                <li class="tab"><a href="#groups" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Groups"><i class="material-icons">group</i>Groups</a></li>
+                <li class="tab"><a href="#about" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="About"><i class="material-icons">info</i>About</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <div id="users" class="col s12">
+            <h5>Okta Ice Research: Users</h5>
+            <p>Users that can work on our Research and Development projects.</p>
+            <div class="divider"></div>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Username</th>
+                    <th>Given Name</th>
+                    <th>Family Name</th>
+                    <th>Active</th>
+                    <th>Email</th>
+                    <th>Employee Number</th>
+                    <th>Cost Center</th>
+                    <th>Favorite Ice Cream</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.id}">id</td>
+                    <td th:text="${user.userName}">Username</td>
+                    <td th:text="${user.firstName}">Given Name</td>
+                    <td th:text="${user.lastName}">Last Name</td>
+                    <td th:text="${user.active}">Active</td>
+                    <td th:text="${user.email}">Email</td>
+                    <td th:text="${user.employeeNumber}">Employee No</td>
+                    <td th:text="${user.costCenter}">Cost Center</td>
+                    <td th:text="${user.favoriteIceCream}">Favorite Ice Cream</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="groups" class="col s12">
+            <h5>Okta Ice Research: Groups</h5>
+            <p>Groups that grant their members Research and Development power.</p>
+            <div class="divider"></div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Group Name</th>
+                        <th>Members</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="group : ${groups}">
+                        <td th:text="${group.id}">ID</td>
+                        <td th:text="${group.displayName}">Display Name</td>
+                        <td>
+                            <ul th:each="member : ${group.users}">
+                                <li th:text="${member.userName}">Id</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="about" class="col s12">
+            <h5 align="center">Okta Ice Research</h5>
+            <div style="display: flex; justify-content: center;">
+                <img class="circle" th:src="@{/iceBigLogo.png}" />
+            </div>
+            <p align="center">This is the best system in the world for Ice-Cream Research and Development projects.</p>
+            <div class="divider"></div>
+            <p>Our plans to conquer the world with our solution are:</p>
+            <ul class="collapsible popout" data-collapsible="accordion">
+                <li>
+                    <div class="collapsible-header teal lighten-2"><i class="material-icons">check_circle</i>Create the best platform for Ice Cream Research and Development <small>(done)</small></div>
+                    <div class="collapsible-body"><span>Create the best platform for Ice cream research and development. Period.</span></div>
+                </li>
+                <li>
+                    <div class="collapsible-header orange lighten-2"><i class="material-icons">code</i>SCIM <small>(in progress)</small></div>
+                    <div class="collapsible-body"><span>Implement a SCIM interface for external account/privileges management</span></div>
+                </li>
+                <li>
+                    <div class="collapsible-header blue lighten-1"><i class="material-icons">lock</i>Security</div>
+                    <div class="collapsible-body"><span>Integrate with Okta and other IDaaS/IDM services</span></div>
+                </li>
+                <li>
+                    <div class="collapsible-header blue lighten-2"><i class="material-icons">cloud</i>Release our Public Cloud Service</div>
+                    <div class="collapsible-body"><span>Release our Ice Cream Research and Development Service (ICEaaS)</span></div>
+                </li>
+                <li>
+                    <div class="collapsible-header blue lighten-3"><i class="material-icons">access_time</i>Roadmap</div>
+                    <div class="collapsible-body"><span>Create the best elevator pitch and roadmap</span></div>
+                </li>
+                <li>
+                    <div class="collapsible-header blue lighten-4"><i class="material-icons">attach_money</i>IPO</div>
+                    <div class="collapsible-body"><span>Make lots of moneeeeey!</span></div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <footer class="page-footer">
+        <div class="footer-copyright">
+            <div class="container">Copyright <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}"></span> Okta Ice. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <!--jQuery and materialize.js-->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $('select').material_select();
+        $(".button-collapse").sideNav();
+      });
+    </script>
+</body>
+</html>

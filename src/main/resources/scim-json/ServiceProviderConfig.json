@@ -1,0 +1,41 @@
+{
+  "schemas": [
+    "urn:ietf:params:scim:schemas:core:2.0:ServiceProviderConfig"
+  ],
+  "id": "ServiceProviderConfig",
+  "documentationUri": "http://docs.oktaice.com/ice-research/rest/rest-endpoints.html",
+  "patch": {
+    "supported": true
+  },
+  "bulk": {
+    "supported": false,
+    "maxOperations": 0,
+    "maxPayloadSize": 0
+  },
+  "filter": {
+    "supported": true,
+    "maxResults": 1000
+  },
+  "changePassword": {
+    "supported": false
+  },
+  "sort": {
+    "supported": false
+  },
+  "etag": {
+    "supported": false
+  },
+  "authenticationSchemes": [
+    {
+      "name": "HTTP Basic",
+      "description": "Authentication scheme using the HTTP Basic Standard",
+      "specUri": "http://www.rfc-editor.org/info/rfc2617",
+      "documentationUri": "http://example.com/help/httpBasic.html",
+      "type": "httpbasic"
+    }
+  ],
+  "meta": {
+    "location": "scim/v2/ServiceProviderConfig",
+    "resourceType": "ServiceProviderConfig"
+  }
+}

@@ -1,0 +1,16 @@
+# Testing Credentials
+security:
+  user:
+    name: serviceAccount
+    password: Tra!nme4321
+# Database Configuration
+spring:
+  datasource:
+    platform: hsqldb
+    url: jdbc:hsqldb:file:basedb/ice
+    username: sa
+  jpa:
+    hibernate.ddl-auto: validate
+    show-sql: true
+logging.level.com.oktaice.scim: DEBUG
+spring.mvc.dispatch-options-request: true
