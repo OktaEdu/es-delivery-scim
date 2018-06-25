@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ScimUtil {
+public class ScimUtilComplete {
 
     //STATIC ATTRIBUTES: USERS
     public static final String USER_ID = "id";
