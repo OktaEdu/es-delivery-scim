@@ -77,21 +77,46 @@ public class ScimUtil {
      * Convert SCIM payload to User
      */
     public static User toUser(Map<String, Object> payload){
-        //GET FLAT ATTRIBUTES
+        // TODO: GET FLAT ATTRIBUTES
 
 
         //GET NAME ATTRIBUTES
-
+        String firstName = null, middleName = null, lastName = null;
+        Map<String, Object> name = (Map<String, Object>)payload.get(USER_NAME_MAP);
+        if (name != null) {
+            firstName = (name.get(USER_FIRST_NAME) != null) ? name.get(USER_FIRST_NAME).toString() : null;
+            middleName = (name.get(USER_MIDDLE_NAME) != null) ? name.get(USER_MIDDLE_NAME).toString() : null;
+            lastName = (name.get(USER_LAST_NAME) != null) ? name.get(USER_LAST_NAME).toString() : null;
+        }
 
         //GET EMAIL ATTRIBUTE
-
+        String email = null;
+        List<Map> emails = (ArrayList<Map>)payload.get(USER_EMAIL_MAP);
+        if(emails != null && emails.size() > 0){
+            for(Map mail : emails){
+                String type = (mail.get(USER_EMAIL_MAP_TYPE) != null) ? mail.get(USER_EMAIL_MAP_TYPE).toString() : null;
+                if(USER_EMAIL_MAP_TYPE_WORK.equals(type)){
+                    email = (mail.get(USER_EMAIL_MAP_VALUE) != null) ? mail.get(USER_EMAIL_MAP_VALUE).toString() : null;
+                }
+            }
+        }
 
         //GET ENTERPRISE ATTRIBUTES
-
+        String empNo = null, cc = null;
+        Map<String, Object> enterpriseAttrs = (Map<String, Object>)payload.get(SCHEMA_USER_ENTERPRISE);
+        if(enterpriseAttrs != null) {
+            empNo = (enterpriseAttrs.get(USER_EMPNO) != null) ? enterpriseAttrs.get(USER_EMPNO).toString() : null;
+            cc = (enterpriseAttrs.get(USER_CC) != null) ? enterpriseAttrs.get(USER_CC).toString() : null;
+        }
 
         //GET OKTAICE ATTRIBUTES
+        String iceCream = null;
+        Map<String, Object> iceAttrs = (Map<String, Object>)payload.get(SCHEMA_USER_OKTAICE);
+        if(iceAttrs != null) {
+            iceCream = (iceAttrs.get(USER_ICECREAM) != null) ? iceAttrs.get(USER_ICECREAM).toString() : null;
+        }
 
-
+        // TODO: RETURN USER
         return null;
     }//toUser
 
@@ -115,6 +140,7 @@ public class ScimUtil {
      */
     public static Map<String, Object> userToPayload(User user){
         Map<String, Object> returnValue = new HashMap<>();
+
         //ADD SCIM SCHEMA
 
 
@@ -122,22 +148,53 @@ public class ScimUtil {
 
 
         //SET NAME ATTRIBUTES
-
+        Map<String, Object> names = new HashMap<>();
+        names.put(USER_FIRST_NAME, user.getFirstName());
+        names.put(USER_MIDDLE_NAME, user.getMiddleName());
+        names.put(USER_LAST_NAME, user.getLastName());
+        returnValue.put(USER_NAME_MAP, names);
 
         //SET EMAIL ATTRIBUTE
-
+        Map<String, Object> email = new HashMap<>();
+        email.put(USER_EMAIL_MAP_TYPE, USER_EMAIL_MAP_TYPE_WORK);
+        email.put(USER_EMAIL_MAP_VALUE, user.getEmail());
+        email.put(USER_EMAIL_MAP_PRIMARY, true);
+        List<Map> emails = new ArrayList<>();
+        emails.add(email);
+        returnValue.put(USER_EMAIL_MAP, emails);
 
         //SET ENTERPRISE ATTRIBUTES
-
+        if(user.getEmployeeNumber() != null || user.getCostCenter() != null){
+            Map<String, Object> enterpriseAttrs = new HashMap<>();
+            enterpriseAttrs.put(USER_EMPNO, user.getEmployeeNumber());
+            enterpriseAttrs.put(USER_CC, user.getCostCenter());
+            returnValue.put(SCHEMA_USER_ENTERPRISE, enterpriseAttrs);
+        }
 
         //SET OKTAICE ATTRIBUTES
-
+        if(user.getFavoriteIceCream() != null){
+            Map<String, Object> iceAttrs = new HashMap<>();
+            iceAttrs.put(USER_ICECREAM, user.getFavoriteIceCream());
+            returnValue.put(SCHEMA_USER_OKTAICE, iceAttrs);
+        }
 
         //SET GROUP MEMBERSHIP
-
+        if(user.getGroups() != null && user.getGroups().size() > 0) {
+            List<Map> groups = new ArrayList<>();
+            for (Group g : user.getGroups()) {
+                Map<String, Object> group = new HashMap<>();
+                group.put(USER_GROUPS_VALUE, g.getUuid());
+                group.put(USER_GROUPS_DISPLAY, g.getDisplayName());
+                groups.add(group);
+            }
+            returnValue.put(USER_GROUPS_MAP, groups);
+        }
 
         //SET METADATA
-
+        Map<String, Object> meta = new HashMap<>();
+        meta.put(META_RESOURCE_TYPE, META_RESOURCE_TYPE_USER);
+        meta.put(META_LOCATION, ("/scim/v2/Users/" + user.getUuid()));
+        returnValue.put(META_ATTRIBUTE, meta);
 
         return returnValue;
     }//userToPayload
@@ -304,7 +361,12 @@ public class ScimUtil {
      * Get a List Response Wrapper for multi-valued searches
      */
     private static Map<String, Object> getListResponse(int totalResults, Optional<Integer> startIndex, Optional<Integer> pageCount){
-        return null;
+        Map<String, Object> returnValue = new HashMap<>();
+        List<String> schemas = new ArrayList<>();
+        schemas.add(SCHEMA_LIST_RESPONSE);
+        returnValue.put(SCHEMA_ATTRIBUTE, schemas);
+
+        return returnValue;
     }//getListResponse
 
     /**
