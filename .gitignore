@@ -31,4 +31,4 @@ nbdist/
 /basedb/*.tmp/
 /basedb/*.log
 /basedb/*.properties
-/basedb/ice.script
+/basedb/*.lck
