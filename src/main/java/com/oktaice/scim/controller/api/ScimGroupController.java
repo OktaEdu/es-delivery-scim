@@ -128,6 +128,9 @@ public class ScimGroupController extends ScimBaseController {
     public @ResponseBody Map updateGroup(@RequestBody Map<String, Object> payload,
                                          @PathVariable String uuid,
                                          HttpServletResponse response) {
+
+        throw new HttpClientErrorException(HttpStatus.NOT_IMPLEMENTED, "PatchOp not implemented");
+        /*
         //CONFIRM THAT THE PATCHOP IS VALID
         ScimUtil.validatePatchOp(payload);
 
@@ -140,6 +143,7 @@ public class ScimGroupController extends ScimBaseController {
         } else {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
         }
+        */
     }//replaceGroup
 
     /**

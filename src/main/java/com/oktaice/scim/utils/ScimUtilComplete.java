@@ -364,6 +364,66 @@ public class ScimUtilComplete {
         return group;
     }//updateGroup
 
+    /**
+     * Update Group with the data passed via JSON PatchOp
+     */
+    public static Group updateGroupPatchOp(Map<String, Object> payload, Group group, UserRepository userRepository){
+
+        //PARSE PATCH OP TO FIND ATTRIBUTE FOR UPDATE
+        List<Map> operations = (List) payload.get(ScimUtil.PATCHOP_PLACEHOLDER);
+        for (Map map : operations) {
+            // CHANGE GROUP NAME
+            if (map.get("op") != null && (map.get("op").equals("replace") && map.get("path") == null)) {
+                Map<String, Object> value = (Map) map.get("value");
+                if (value != null) {
+                    for (Map.Entry key : value.entrySet()) {
+                        //THIS METHOD SUPPORTS CHANGE ONLY IN THE ACTIVE STATUS
+                        if (key.getKey().equals(ScimUtil.GROUP_NAME)) {
+                            group.setDisplayName((String) key.getValue());
+                        }
+                    }
+                }
+                return group;
+                // REPLACE ALL MEMBERS
+            } else if (map.get("op") != null && (map.get("op").equals("replace") && map.get("path").equals("members"))) {
+                List<Map> ms = (ArrayList<Map>) map.get("value");
+                List<User> members = new ArrayList();
+                if (ms != null && ms.size() > 0) {
+                    for (Map member : ms) {
+                        if (member.get(GROUP_MEMBERS_VALUE) != null) {
+                            User u = userRepository.findOneByUuid(member.get(GROUP_MEMBERS_VALUE).toString());
+                            if (u != null) {
+                                members.add(u);
+                            }
+                        }
+                    }
+                }
+                group.setUsers(members);
+                return group;
+                // ADD MEMBERS
+            } else if (map.get("op") != null && map.get("op").equals("add")) {
+                List<Map> ms = (ArrayList<Map>) map.get("value");
+                List<User> members = new ArrayList();
+                if (ms != null && ms.size() > 0) {
+                    for (Map member : ms) {
+                        if (member.get(GROUP_MEMBERS_VALUE) != null) {
+                            User u = userRepository.findOneByUuid(member.get(GROUP_MEMBERS_VALUE).toString());
+                            if (u != null) {
+                                members.add(u);
+                            }
+                        }
+                    }
+                }
+                group.setUsers(members);
+                return group;
+                // REMOVE MEMBERS (NOT DONE)
+            } else if (map.get("op") != null && map.get("op").equals("remove")) {
+
+            }
+        }
+        return group;
+    }//updateGroupPatchOp
+
     //END: METHODS THAT UPDATE JAVA OBJECT WITH PAYLOAD DATA
 
     //BEGIN: SUPPORTING METHODS REQUIRED BY SCIM
