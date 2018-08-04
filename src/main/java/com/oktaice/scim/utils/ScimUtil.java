@@ -202,8 +202,7 @@ public class ScimUtil {
     /**
      * Convert List of Users to SCIM
      */
-    public static Map<String, Object> usersToPayload(List<User> users, Optional<Integer> startIndex,
-                                                     Optional<Integer> pageCount){
+    public static Map<String, Object> usersToPayload(List<User> users, Integer startIndex, Integer pageCount) {
         //GET A LIST RESPONSE
 
 

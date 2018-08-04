@@ -215,11 +215,10 @@ public class ScimUtilComplete {
     /**
      * Convert List of Users to SCIM
      */
-    public static Map<String, Object> usersToPayload(List<User> users, Optional<Integer> startIndex,
-                                                     Optional<Integer> pageCount){
+    public static Map<String, Object> usersToPayload(List<User> users, Integer startIndex, Integer pageCount) {
         //GET A LIST RESPONSE
         int totalResults = users.size();
-        Map<String, Object> returnValue = getListResponse(totalResults,startIndex,pageCount);
+        Map<String, Object> returnValue = getListResponse(totalResults, startIndex, pageCount);
 
         //ITERATE LIST OF USERS
         List<Map> usersList = new ArrayList<>();
@@ -273,7 +272,7 @@ public class ScimUtilComplete {
                                                      Optional<Integer> pageCount){
         //GET A LIST RESPONSE
         int totalResults = groups.size();
-        Map<String, Object> returnValue = getListResponse(totalResults, startIndex, pageCount);
+        Map<String, Object> returnValue = getListResponse(totalResults, startIndex.orElse(1), pageCount.orElse(100));
 
         //ITERATE LIST OF GROUPS
         List<Map> groupList = new ArrayList<>();
@@ -440,17 +439,14 @@ public class ScimUtilComplete {
     /**
      * Get a List Response Wrapper for multi-valued searches
      */
-    private static Map<String, Object> getListResponse(int totalResults, Optional<Integer> startIndex, Optional<Integer> pageCount){
+    private static Map<String, Object> getListResponse(int totalResults, Integer startIndex, Integer pageCount) {
         Map<String, Object> returnValue = new HashMap<>();
         List<String> schemas = new ArrayList<>();
         schemas.add(SCHEMA_LIST_RESPONSE);
         returnValue.put(SCHEMA_ATTRIBUTE, schemas);
         returnValue.put(LIST_RESPONSE_RESULTS, totalResults);
-        returnValue.put(LIST_RESPONSE_INDEX, startIndex.orElse(1));
-        int pc = pageCount.orElse(0);
-        if(pc > 0) {
-            returnValue.put(LIST_RESPONSE_ITEMS_PER_PAGE, pc);
-        }
+        returnValue.put(LIST_RESPONSE_INDEX, startIndex);
+        returnValue.put(LIST_RESPONSE_ITEMS_PER_PAGE, pageCount);
         return returnValue;
     }//getListResponse
 
