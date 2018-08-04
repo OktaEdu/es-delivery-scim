@@ -1,19 +1,29 @@
 package com.oktaice.scim.controller.api;
 
 import com.oktaice.scim.model.Group;
+import com.oktaice.scim.model.ScimPageFilter;
 import com.oktaice.scim.repository.GroupRepository;
 import com.oktaice.scim.repository.UserRepository;
 import com.oktaice.scim.utils.ScimUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.regex.Matcher;
 
 /**
@@ -30,135 +40,99 @@ public class ScimGroupController extends ScimBaseController {
         this.userRepository = userRepository;
     }
 
-    /**
-     * Return all groups with pagination
-     * @return ListResponse containing several Groups
-     */
+    @PostMapping
+    public @ResponseBody Map<String, Object> createGroup(
+        @RequestBody Map<String, Object> params, HttpServletResponse response
+    ) {
+        Group newGroup = ScimUtil.toGroup(params, userRepository);
+        groupRepository.save(newGroup);
+        response.setStatus(201);
+        return ScimUtil.groupToPayload(newGroup);
+    }
+
+    @GetMapping("/{uuid}")
+    public Map<String, Object> getGroup(@PathVariable String uuid, HttpServletResponse response) {
+        Group group = groupRepository.findOneByUuid(uuid);
+        if (group == null) {
+            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
+        }
+        return ScimUtil.groupToPayload(group);
+    }
+
     @GetMapping
-    public  @ResponseBody Map getGroups(@RequestParam Map<String, String> params){
+    public @ResponseBody Map<String, Object> getGroups(@ModelAttribute ScimPageFilter scimPageFilter) {
+        //GET STARTINDEX AND COUNT FOR PAGINATION
+        PageRequest pageRequest = new PageRequest(scimPageFilter.getStartIndex() - 1, scimPageFilter.getCount());
+
         Page<Group> groups = null;
 
-        //GET STARTINDEX AND COUNT FOR PAGINATION
-        int pageCount = (params.get(ScimUtil.LIST_RESPONSE_COUNT) != null) ? Integer.parseInt(params.get(ScimUtil.LIST_RESPONSE_COUNT)) : 100;
-        int startIndex = (params.get(ScimUtil.LIST_RESPONSE_INDEX) != null) ? Integer.parseInt(params.get(ScimUtil.LIST_RESPONSE_INDEX)) : 1;
-        startIndex = (startIndex < 1) ? 1 : startIndex;
-        PageRequest pageRequest = new PageRequest((startIndex-1), pageCount);
-
         //PARSE SEARCH FILTER
-        String filter = params.get(ScimUtil.LIST_RESPONSE_SEARCH_FILTER);
-        if (filter != null && filter.contains("eq")) {
-            Matcher match = ScimUtil.parseFilter(filter);
-            if (match.find()) {
-                String searchKeyName = match.group(1);
-                String searchValue = match.group(2);
-                //IF THERE'S A VALID FILTER, USE THE PROPER METHOD FOR GROUP SEARCH
-                switch (searchKeyName) {
-                    case ScimUtil.GROUP_NAME:
-                        groups = groupRepository.findByName(searchValue, pageRequest);
-                        break;
-                    case ScimUtil.GROUP_UUID:
-                        groups = groupRepository.findByUuid(searchValue, pageRequest);
-                        break;
-                    default:
-                        throw new HttpClientErrorException(HttpStatus.NOT_IMPLEMENTED, "Filter not implemented");
-                }
-            } else {
-                //IF FILTER IS NOT RECOGNIZED, FIND ALL ENTRIES
-                groups = groupRepository.findAll(pageRequest);
+        Matcher match = scimPageFilter.parseFilter();
+        if (match.find()) {
+            String searchKeyName = match.group(1);
+            String searchValue = match.group(2);
+            //IF THERE'S A VALID FILTER, USE THE PROPER METHOD FOR GROUP SEARCH
+            switch (searchKeyName) {
+                case ScimUtil.GROUP_NAME:
+                    groups = groupRepository.findByName(searchValue, pageRequest);
+                    break;
+                case ScimUtil.GROUP_UUID:
+                    groups = groupRepository.findByUuid(searchValue, pageRequest);
+                    break;
+                default:
+                    throw new HttpClientErrorException(HttpStatus.NOT_IMPLEMENTED, "Filter not implemented");
             }
         } else {
             //IF THERE'S NO FILTER, FIND ALL ENTRIES
             groups = groupRepository.findAll(pageRequest);
         }
+
         //GET LIST OF GROUPS FROM SEARCH AND CONVERT TO SCIM FOR RESPONSE
         List<Group> groupsFound = groups.getContent();
-        return ScimUtil.groupsToPayload(groupsFound, Optional.of(startIndex), Optional.of(pageCount));
-    }//getGroups
+        return ScimUtil.groupsToPayload(groupsFound, scimPageFilter.getStartIndex(), scimPageFilter.getCount());
+    }
 
-
-    /**
-     * Create group while validating the membership ids
-     * id's that don't match will be ignored
-     */
-    @PostMapping
-    public @ResponseBody Map createGroup(@RequestBody Map<String, Object> params, HttpServletResponse response) {
-        Group newGroup = ScimUtil.toGroup(params, userRepository);
-        groupRepository.save(newGroup);
-        response.setStatus(201);
-        return ScimUtil.groupToPayload(newGroup);
-    }//createGroup
-
-    /**
-     * Get specific group
-     * @param uuid Group UUID
-     */
-    @GetMapping("/{uuid}")
-    public Map getGroup(@PathVariable String uuid, HttpServletResponse response) {
-        Group g = groupRepository.findOneByUuid(uuid);
-        if(g == null){
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
-        }
-        return ScimUtil.groupToPayload(g);
-    }//toGroup
-
-    /**
-     * Replace group via put
-     * @param uuid Group UUID
-     */
     @PutMapping("/{uuid}")
-    public @ResponseBody Map replaceGroup(@RequestBody Map<String, Object> payload,
-                                          @PathVariable String uuid,
-                                          HttpServletResponse response) {
+    public @ResponseBody Map<String, Object> replaceGroup(
+        @RequestBody Map<String, Object> scimRequest, @PathVariable String uuid, HttpServletResponse response
+    ) {
         Group group = groupRepository.findOneByUuid(uuid);
-        if(group != null){
-            group = ScimUtil.updateGroup(payload, group, userRepository);
-            groupRepository.save(group);
-            response.setStatus(HttpStatus.OK.value());
-            return ScimUtil.groupToPayload(group);
-        }else{
+        if (group == null) {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
         }
-    }//replaceGroup
 
-    /**
-     * Update group via post
-     * @param uuid Group UUID
-     */
+        group = ScimUtil.updateGroup(scimRequest, group, userRepository);
+        groupRepository.save(group);
+        response.setStatus(HttpStatus.OK.value());
+        return ScimUtil.groupToPayload(group);
+    }
+
     @PatchMapping("/{uuid}")
-    public @ResponseBody Map updateGroup(@RequestBody Map<String, Object> payload,
-                                         @PathVariable String uuid,
-                                         HttpServletResponse response) {
-
-        throw new HttpClientErrorException(HttpStatus.NOT_IMPLEMENTED, "PatchOp not implemented");
-        /*
+    public @ResponseBody Map<String, Object> updateGroup(
+        @RequestBody Map<String, Object> scimPatchOp, @PathVariable String uuid, HttpServletResponse response
+    ) {
         //CONFIRM THAT THE PATCHOP IS VALID
-        ScimUtil.validatePatchOp(payload);
+        ScimUtil.validatePatchOp(scimPatchOp);
 
         Group group = groupRepository.findOneByUuid(uuid);
-        if(group != null){
-            group = ScimUtil.updateGroupPatchOp(payload, group, userRepository);
-            groupRepository.save(group);
-            response.setStatus(HttpStatus.OK.value());
-            return ScimUtil.groupToPayload(group);
-        } else {
+        if (group == null) {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
         }
-        */
-    }//replaceGroup
 
-    /**
-     * Delete group
-     * @param uuid Group UUID
-     */
+        group = ScimUtil.updateGroupPatchOp(scimPatchOp, group, userRepository);
+        groupRepository.save(group);
+        response.setStatus(HttpStatus.OK.value());
+        return ScimUtil.groupToPayload(group);
+    }
+
     @DeleteMapping("/{uuid}")
     public void deleteGroup(@PathVariable String uuid, HttpServletResponse response) {
-        Group g = groupRepository.findOneByUuid(uuid);
-        if(g != null) {
-            groupRepository.delete(g);
-            response.setStatus(HttpStatus.NO_CONTENT.value());
-        }else{
+        Group group = groupRepository.findOneByUuid(uuid);
+        if (group == null) {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
         }
-    }//deleteGroup
 
+        groupRepository.delete(group);
+        response.setStatus(HttpStatus.NO_CONTENT.value());
+    }
 }

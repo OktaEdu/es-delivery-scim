@@ -155,7 +155,7 @@ public class ScimUserController extends ScimBaseController {
         for (Group g : user.getGroups()) {
             g.getUsers().remove(user);
         }
-        
+
         //delete user
         userRepository.delete(user);
         response.setStatus(HttpStatus.NO_CONTENT.value());

@@ -214,7 +214,7 @@ public class ScimUtil {
     /**
      * Convert Group to SCIM
      */
-    public static Map<String, Object> groupToPayload(Group group){
+    public static Map<String, Object> groupToPayload(Group group) {
         Map<String, Object> returnValue = new HashMap<>();
         //ADD SCIM SCHEMA
         String[] schemas = {SCHEMA_GROUP_CORE};
@@ -248,8 +248,9 @@ public class ScimUtil {
     /**
      * Get list of Groups in SCIM ListResponse format
      */
-    public static Map<String, Object> groupsToPayload(List<Group> groups, Optional<Integer> startIndex,
-                                                     Optional<Integer> pageCount){
+    public static Map<String, Object> groupsToPayload(
+        List<Group> groups, Integer startIndex, Integer pageCount
+    ) {
         //GET A LIST RESPONSE
         int totalResults = groups.size();
         Map<String, Object> returnValue = getListResponse(totalResults, startIndex, pageCount);
@@ -419,7 +420,7 @@ public class ScimUtil {
     /**
      * Get a List Response Wrapper for multi-valued searches
      */
-    private static Map<String, Object> getListResponse(int totalResults, Optional<Integer> startIndex, Optional<Integer> pageCount){
+    private static Map<String, Object> getListResponse(int totalResults, Integer startIndex, Integer pageCount) {
         Map<String, Object> returnValue = new HashMap<>();
         List<String> schemas = new ArrayList<>();
         schemas.add(SCHEMA_LIST_RESPONSE);
