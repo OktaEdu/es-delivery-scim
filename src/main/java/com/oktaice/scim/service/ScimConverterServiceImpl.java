@@ -1,6 +1,7 @@
 package com.oktaice.scim.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.oktaice.scim.model.Group;
 import com.oktaice.scim.model.ScimEnterpriseUser;
 import com.oktaice.scim.model.ScimExceptionResponse;
 import com.oktaice.scim.model.ScimOktaIceUser;
@@ -86,6 +87,16 @@ public class ScimConverterServiceImpl implements ScimConverterService {
         List<ScimUser.Email> emails = new ArrayList<>();
         emails.add(email);
         scimOktaIceUser.setEmails(emails);
+
+        // group(s) attribute
+        List<ScimUser.Group> groups = new ArrayList<ScimUser.Group>();
+        for (Group group : user.getGroups()) {
+            ScimUser.Group scimUserGroup = new ScimUser.Group();
+            scimUserGroup.setDisplay(group.getDisplayName());
+            scimUserGroup.setValue(group.getUuid());
+            groups.add(scimUserGroup);
+        }
+        scimOktaIceUser.setGroups(groups);
 
         // enterprise attributes
         ScimEnterpriseUser.EnterpriseAttributes enterpriseAttributes = new ScimEnterpriseUser.EnterpriseAttributes();

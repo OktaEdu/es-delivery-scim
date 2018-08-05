@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ScimResource {
 
-    public static final String SCHEMA_BASE = "urn:ietf:scim:schemas";
+    public static final String SCHEMA_BASE = "urn:ietf:params:scim:schemas";
 
     private List<String> schemas = new ArrayList<>();
 

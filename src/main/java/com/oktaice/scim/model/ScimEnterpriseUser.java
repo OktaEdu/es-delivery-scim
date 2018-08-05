@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import static com.oktaice.scim.model.ScimEnterpriseUser.SCHEMA_USER_ENTERPRISE;
 
-@JsonPropertyOrder({ "schemas", "id", "active", "userName", "name", "emails", SCHEMA_USER_ENTERPRISE, "meta" })
+@JsonPropertyOrder({ "schemas", "id", "active", "userName", "name", "emails", "groups", SCHEMA_USER_ENTERPRISE, "meta" })
 public class ScimEnterpriseUser extends ScimUser {
 
     public static final String SCHEMA_USER_ENTERPRISE = SCHEMA_BASE + ":extension:enterprise:2.0:User";

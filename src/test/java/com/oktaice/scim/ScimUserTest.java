@@ -29,6 +29,8 @@ public class ScimUserTest {
     private static final boolean EMAIL_PRIMARY = true;
     private static final String EMAIL_ADDRESS = "micah.silverman@okta.com";
     private static final String EMAIL_TYPE = "work";
+    private static final String GROUP_DISPLAY_NAME = "Admins";
+    private static final String GROUP_ID = "1234abcd";
     private static final String COST_CENTER = "CC";
     private static final String EMPLOYEE_NUMBER = "EN";
     private static final String ICE_CREAM = "vanilla";
@@ -40,7 +42,9 @@ public class ScimUserTest {
             "`id`:`" + ID + "`,`active`:" + ACTIVE + ",`userName`:`" + USER_NAME + "`," +
             "`name`:{`givenName`:`" + GIVEN_NAME + "`,`middleName`:`" + MIDDLE_NAME + "`," + 
             "`familyName`:`" + FAMILY_NAME + "`}," + 
-            "`emails`:[{`primary`:" + EMAIL_PRIMARY + ",`value`:`" + EMAIL_ADDRESS + "`,`type`:`" + EMAIL_TYPE + "`}]"
+            "`emails`:[{`primary`:" + EMAIL_PRIMARY +
+                ",`value`:`" + EMAIL_ADDRESS + "`,`type`:`" + EMAIL_TYPE + "`}]," +
+            "`groups`:[{`display`:`" + GROUP_DISPLAY_NAME + "`,`value`:`" + GROUP_ID + "`}]"
         ).replace('`', '"');
 
     private static final String USER_ENTERPRISE = 
@@ -107,6 +111,14 @@ public class ScimUserTest {
         email.setType(EMAIL_TYPE);
         email.setValue(EMAIL_ADDRESS);
 
+        // groups
+        List<ScimUser.Group> groups = new ArrayList<>();
+        ScimUser.Group group = new ScimUser.Group();
+        groups.add(group);
+        user.setGroups(groups);
+        group.setDisplay(GROUP_DISPLAY_NAME);
+        group.setValue(GROUP_ID);
+
         // meta
         ScimResource.Meta meta = new ScimResource.Meta();
         user.setMeta(meta);
@@ -142,6 +154,14 @@ public class ScimUserTest {
         email.setPrimary(EMAIL_PRIMARY);
         email.setType(EMAIL_TYPE);
         email.setValue(EMAIL_ADDRESS);
+
+        // groups
+        List<ScimUser.Group> groups = new ArrayList<>();
+        ScimUser.Group group = new ScimUser.Group();
+        groups.add(group);
+        user.setGroups(groups);
+        group.setDisplay(GROUP_DISPLAY_NAME);
+        group.setValue(GROUP_ID);
 
         // enterprise attributes
         ScimEnterpriseUser.EnterpriseAttributes enterpriseAttributes = new ScimEnterpriseUser.EnterpriseAttributes();
@@ -184,6 +204,14 @@ public class ScimUserTest {
         email.setPrimary(EMAIL_PRIMARY);
         email.setType(EMAIL_TYPE);
         email.setValue(EMAIL_ADDRESS);
+
+        // groups
+        List<ScimUser.Group> groups = new ArrayList<>();
+        ScimUser.Group group = new ScimUser.Group();
+        groups.add(group);
+        user.setGroups(groups);
+        group.setDisplay(GROUP_DISPLAY_NAME);
+        group.setValue(GROUP_ID);
 
         // enterprise attributes
         ScimEnterpriseUser.EnterpriseAttributes enterpriseAttributes = new ScimEnterpriseUser.EnterpriseAttributes();
@@ -232,6 +260,11 @@ public class ScimUserTest {
         assertEquals(EMAIL_TYPE, email.getType());
         assertEquals(EMAIL_ADDRESS, email.getValue());
 
+        // verify group
+        ScimUser.Group group = user.getGroups().get(0);
+        assertEquals(GROUP_DISPLAY_NAME, group.getDisplay());
+        assertEquals(GROUP_ID, group.getValue());
+
         // verify enterprise
         assertEquals(COST_CENTER, user.getEnterpriseAttributes().getCostCenter());
         assertEquals(EMPLOYEE_NUMBER, user.getEnterpriseAttributes().getEmployeeNumber());
@@ -264,6 +297,11 @@ public class ScimUserTest {
         assertEquals(EMAIL_TYPE, email.getType());
         assertEquals(EMAIL_ADDRESS, email.getValue());
 
+        // verify group
+        ScimUser.Group group = user.getGroups().get(0);
+        assertEquals(GROUP_DISPLAY_NAME, group.getDisplay());
+        assertEquals(GROUP_ID, group.getValue());
+
         // verify enterprise
         assertEquals(COST_CENTER, user.getEnterpriseAttributes().getCostCenter());
         assertEquals(EMPLOYEE_NUMBER, user.getEnterpriseAttributes().getEmployeeNumber());
@@ -291,5 +329,10 @@ public class ScimUserTest {
         assertEquals(EMAIL_PRIMARY, email.isPrimary());
         assertEquals(EMAIL_TYPE, email.getType());
         assertEquals(EMAIL_ADDRESS, email.getValue());
+
+        // verify group
+        ScimUser.Group group = user.getGroups().get(0);
+        assertEquals(GROUP_DISPLAY_NAME, group.getDisplay());
+        assertEquals(GROUP_ID, group.getValue());
     }
 }

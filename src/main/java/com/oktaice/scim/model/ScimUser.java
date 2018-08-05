@@ -1,11 +1,10 @@
 package com.oktaice.scim.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.List;
 
-@JsonPropertyOrder({ "schemas", "id", "active", "userName", "name", "emails", "meta" })
+@JsonPropertyOrder({ "schemas", "id", "active", "userName", "name", "emails", "groups", "meta" })
 public class ScimUser extends ScimResource {
 
     public static final String SCHEMA_USER_CORE = SCHEMA_BASE + ":core:2.0:User";
@@ -14,6 +13,7 @@ public class ScimUser extends ScimResource {
     private String userName;
     private Name name;
     private List<Email> emails;
+    private List<Group> groups;
 
     public ScimUser() {
         super();
@@ -50,6 +50,14 @@ public class ScimUser extends ScimResource {
 
     public void setEmails(List<Email> emails) {
         this.emails = emails;
+    }
+
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
     }
 
     public static class Name {
@@ -110,6 +118,28 @@ public class ScimUser extends ScimResource {
 
         public void setType(String type) {
             this.type = type;
+        }
+    }
+
+    public static class Group {
+
+        private String display;
+        private String value;
+
+        public String getDisplay() {
+            return display;
+        }
+
+        public void setDisplay(String display) {
+            this.display = display;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
         }
     }
 }
