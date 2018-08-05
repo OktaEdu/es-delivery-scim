@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oktaice.scim.model.Group;
 import com.oktaice.scim.model.ScimEnterpriseUser;
 import com.oktaice.scim.model.ScimExceptionResponse;
+import com.oktaice.scim.model.ScimListResponse;
 import com.oktaice.scim.model.ScimOktaIceUser;
 import com.oktaice.scim.model.ScimResource;
 import com.oktaice.scim.model.ScimUser;
@@ -116,5 +117,23 @@ public class ScimConverterServiceImpl implements ScimConverterService {
         scimOktaIceUser.setMeta(meta);
 
         return scimOktaIceUser;
+    }
+
+    @Override
+    public ScimListResponse usersToListResponse(List<User> users, Integer startIndex, Integer pageCount) {
+        ScimListResponse scimListResponse = new ScimListResponse();
+
+        scimListResponse.setStartIndex(startIndex);
+        scimListResponse.setItemsPerPage(pageCount);
+        scimListResponse.setTotalResults(users.size());
+
+        List<ScimResource> scimResources = new ArrayList<>();
+        scimListResponse.setResources(scimResources);
+
+        for (User user : users) {
+            scimResources.add(userToScimOktaIceUser(user));
+        }
+
+        return scimListResponse;
     }
 }

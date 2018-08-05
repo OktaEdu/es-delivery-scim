@@ -1,6 +1,7 @@
 package com.oktaice.scim.controller.api;
 
 import com.oktaice.scim.model.Group;
+import com.oktaice.scim.model.ScimListResponse;
 import com.oktaice.scim.model.ScimOktaIceUser;
 import com.oktaice.scim.model.ScimPageFilter;
 import com.oktaice.scim.model.User;
@@ -62,8 +63,7 @@ public class ScimUserController extends ScimBaseController {
     }
 
     @GetMapping
-    public @ResponseBody Map<String, Object> getUsers(@ModelAttribute ScimPageFilter scimPageFilter) {
-
+    public @ResponseBody ScimListResponse getUsers(@ModelAttribute ScimPageFilter scimPageFilter) {
         //GET STARTINDEX AND COUNT FOR PAGINATION
         PageRequest pageRequest =
             new PageRequest(scimPageFilter.getStartIndex() - 1, scimPageFilter.getCount());
@@ -98,7 +98,9 @@ public class ScimUserController extends ScimBaseController {
         }
         //GET LIST OF USERS FROM SEARCH AND CONVERT TO SCIM FOR RESPONSE
         List<User> foundUsers = users.getContent();
-        return ScimUtil.usersToPayload(foundUsers, scimPageFilter.getStartIndex(), scimPageFilter.getCount());
+        return scimConverterService.usersToListResponse(
+            foundUsers, scimPageFilter.getStartIndex(), scimPageFilter.getCount()
+        );
     }
 
     @PutMapping("/{uuid}")
