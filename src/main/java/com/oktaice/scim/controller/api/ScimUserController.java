@@ -1,9 +1,11 @@
 package com.oktaice.scim.controller.api;
 
 import com.oktaice.scim.model.Group;
+import com.oktaice.scim.model.ScimOktaIceUser;
 import com.oktaice.scim.model.ScimPageFilter;
 import com.oktaice.scim.model.User;
 import com.oktaice.scim.repository.UserRepository;
+import com.oktaice.scim.service.ScimConverterService;
 import com.oktaice.scim.utils.ScimUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,14 +28,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
+import static com.oktaice.scim.service.ScimConverterService.USERS_LOCATION_BASE;
+
 @RestController
-@RequestMapping("/scim/v2/Users")
+@RequestMapping(USERS_LOCATION_BASE)
 public class ScimUserController extends ScimBaseController {
 
     UserRepository userRepository;
+    ScimConverterService scimConverterService;
 
-    public ScimUserController(UserRepository userRepository) {
+    public ScimUserController(UserRepository userRepository, ScimConverterService scimConverterService) {
         this.userRepository = userRepository;
+        this.scimConverterService = scimConverterService;
     }
 
     @PostMapping
@@ -47,12 +53,12 @@ public class ScimUserController extends ScimBaseController {
     }
 
     @GetMapping("/{uuid}")
-    public @ResponseBody Map<String, Object> getUser(@PathVariable String uuid, HttpServletResponse response) {
+    public @ResponseBody ScimOktaIceUser getUser(@PathVariable String uuid, HttpServletResponse response) {
         User user = userRepository.findOneByUuid(uuid);
         if (user == null) {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
         }
-        return ScimUtil.userToPayload(user);
+        return scimConverterService.userToScimOktaIceUser(user);
     }
 
     @GetMapping

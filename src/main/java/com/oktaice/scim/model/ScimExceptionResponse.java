@@ -1,26 +1,36 @@
 package com.oktaice.scim.model;
 
-public class ScimExceptionResponse {
+public class ScimExceptionResponse extends ScimResource {
 
-    private final String[] schemas = {"urn:ietf:params:scim:api:messages:2.0:Error"};
-    private final String detail;
-    private final String status;
+    public final static String ERROR_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:Error";
 
+    private String detail;
+    private String status;
 
-    public ScimExceptionResponse(String detail, String status) {
-        this.detail = detail;
-        this.status = status;
+    public ScimExceptionResponse() {
+        super();
+        getSchemas().add(ERROR_SCHEMA);
     }
 
-    public String[] getSchemas() {
-        return schemas;
+    public ScimExceptionResponse(String detail, String status) {
+        this();
+        this.detail = detail;
+        this.status = status;
     }
 
     public String getDetail() {
         return detail;
     }
 
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
+
     public String getStatus() {
         return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
