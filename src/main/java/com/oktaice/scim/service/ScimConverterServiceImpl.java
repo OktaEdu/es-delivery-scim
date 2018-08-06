@@ -91,14 +91,12 @@ public class ScimConverterServiceImpl implements ScimConverterService {
         scimOktaIceUser.setEmails(emails);
 
         // group(s) attribute
-        List<ScimUser.Group> groups = new ArrayList<ScimUser.Group>();
         for (Group group : user.getGroups()) {
             ScimUser.Group scimUserGroup = new ScimUser.Group();
             scimUserGroup.setDisplay(group.getDisplayName());
             scimUserGroup.setValue(group.getUuid());
-            groups.add(scimUserGroup);
+            scimOktaIceUser.getGroups().add(scimUserGroup);
         }
-        scimOktaIceUser.setGroups(groups);
 
         // enterprise attributes
         ScimEnterpriseUser.EnterpriseAttributes enterpriseAttributes = new ScimEnterpriseUser.EnterpriseAttributes();
@@ -128,11 +126,8 @@ public class ScimConverterServiceImpl implements ScimConverterService {
         scimListResponse.setItemsPerPage(pageCount);
         scimListResponse.setTotalResults(users.size());
 
-        List<ScimResource> scimResources = new ArrayList<>();
-        scimListResponse.setResources(scimResources);
-
         for (User user : users) {
-            scimResources.add(userToScimOktaIceUser(user));
+            scimListResponse.getResources().add(userToScimOktaIceUser(user));
         }
 
         return scimListResponse;
@@ -158,5 +153,20 @@ public class ScimConverterServiceImpl implements ScimConverterService {
         }
 
         return scimGroup;
+    }
+
+    @Override
+    public ScimListResponse groupsToListResponse(List<Group> groups, Integer startIndex, Integer pageCount) {
+        ScimListResponse scimListResponse = new ScimListResponse();
+
+        scimListResponse.setStartIndex(startIndex);
+        scimListResponse.setItemsPerPage(pageCount);
+        scimListResponse.setTotalResults(groups.size());
+
+        for (Group group : groups) {
+            scimListResponse.getResources().add(groupToScimGroup(group));
+        }
+
+        return scimListResponse;
     }
 }

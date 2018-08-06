@@ -2,6 +2,7 @@ package com.oktaice.scim.controller.api;
 
 import com.oktaice.scim.model.Group;
 import com.oktaice.scim.model.ScimGroup;
+import com.oktaice.scim.model.ScimListResponse;
 import com.oktaice.scim.model.ScimPageFilter;
 import com.oktaice.scim.repository.GroupRepository;
 import com.oktaice.scim.repository.UserRepository;
@@ -66,7 +67,7 @@ public class ScimGroupController extends ScimBaseController {
     }
 
     @GetMapping
-    public @ResponseBody Map<String, Object> getGroups(@ModelAttribute ScimPageFilter scimPageFilter) {
+    public @ResponseBody ScimListResponse getGroups(@ModelAttribute ScimPageFilter scimPageFilter) {
         //GET STARTINDEX AND COUNT FOR PAGINATION
         PageRequest pageRequest = new PageRequest(scimPageFilter.getStartIndex() - 1, scimPageFilter.getCount());
 
@@ -95,7 +96,9 @@ public class ScimGroupController extends ScimBaseController {
 
         //GET LIST OF GROUPS FROM SEARCH AND CONVERT TO SCIM FOR RESPONSE
         List<Group> groupsFound = groups.getContent();
-        return ScimUtil.groupsToPayload(groupsFound, scimPageFilter.getStartIndex(), scimPageFilter.getCount());
+        return scimConverterService.groupsToListResponse(
+            groupsFound, scimPageFilter.getStartIndex(), scimPageFilter.getCount()
+        );
     }
 
     @PutMapping("/{uuid}")

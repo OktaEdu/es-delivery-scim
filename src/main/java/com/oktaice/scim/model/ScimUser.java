@@ -2,6 +2,7 @@ package com.oktaice.scim.model;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @JsonPropertyOrder({ "schemas", "id", "active", "userName", "name", "emails", "groups", "meta" })
@@ -13,7 +14,7 @@ public class ScimUser extends ScimResource {
     private String userName;
     private Name name;
     private List<Email> emails;
-    private List<Group> groups;
+    private List<Group> groups = new ArrayList<>();
 
     public ScimUser() {
         super();

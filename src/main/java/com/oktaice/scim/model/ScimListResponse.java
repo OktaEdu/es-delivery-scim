@@ -14,7 +14,7 @@ public class ScimListResponse extends ScimResource {
     private Integer itemsPerPage;
 
     @JsonProperty("Resources")
-    private List<ScimResource> resources;
+    private List<ScimResource> resources = new ArrayList<>();
 
     public ScimListResponse() {
         getSchemas().add(SCHEMA_LIST_RESPONSE);
@@ -50,14 +50,5 @@ public class ScimListResponse extends ScimResource {
 
     public void setResources(List<ScimResource> resources) {
         this.resources = resources;
-    }
-
-    public void addResource(ScimResource scimResource) {
-        if (scimResource != null) {
-            if (resources == null) {
-                resources = new ArrayList<>();
-            }
-            resources.add(scimResource);
-        }
     }
 }

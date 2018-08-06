@@ -20,4 +20,5 @@ public interface ScimConverterService {
     ScimListResponse usersToListResponse(List<User> users, Integer startIndex, Integer pageCount);
 
     ScimGroup groupToScimGroup(Group group);
+    ScimListResponse groupsToListResponse(List<Group> groups, Integer startIndex, Integer pageCount);
 }
