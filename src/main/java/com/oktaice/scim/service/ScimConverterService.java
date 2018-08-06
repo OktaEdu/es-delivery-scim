@@ -4,6 +4,7 @@ import com.oktaice.scim.model.Group;
 import com.oktaice.scim.model.ScimGroup;
 import com.oktaice.scim.model.ScimListResponse;
 import com.oktaice.scim.model.ScimOktaIceUser;
+import com.oktaice.scim.model.ScimPatchOp;
 import com.oktaice.scim.model.ScimUser;
 import com.oktaice.scim.model.User;
 
@@ -16,6 +17,7 @@ public interface ScimConverterService {
 
     ScimUser mapToScimUser(Map<String, Object> scimRequest);
     User scimUserToUser(ScimUser scimUser);
+    void validatePatchOp(ScimPatchOp scimPatchOp);
 
     ScimOktaIceUser userToScimOktaIceUser(User user);
     ScimListResponse usersToListResponse(List<User> users, Integer startIndex, Integer pageCount);

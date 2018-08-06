@@ -4,6 +4,7 @@ import com.oktaice.scim.model.Group;
 import com.oktaice.scim.model.ScimListResponse;
 import com.oktaice.scim.model.ScimOktaIceUser;
 import com.oktaice.scim.model.ScimPageFilter;
+import com.oktaice.scim.model.ScimPatchOp;
 import com.oktaice.scim.model.ScimUser;
 import com.oktaice.scim.model.User;
 import com.oktaice.scim.repository.UserRepository;
@@ -144,11 +145,11 @@ public class ScimUserController extends ScimBaseController {
 
     @SuppressWarnings("unchecked")
     @PatchMapping("/{uuid}")
-    public @ResponseBody Map<String, Object> updateUser(
-        @RequestBody Map<String, Object> scimPatchOp, @PathVariable String uuid, HttpServletResponse response
+    public @ResponseBody ScimOktaIceUser updateUser(
+        @RequestBody ScimPatchOp scimPatchOp, @PathVariable String uuid, HttpServletResponse response
     ) {
         //CONFIRM THAT THE PATCHOP IS VALID
-        ScimUtil.validatePatchOp(scimPatchOp);
+        scimConverterService.validatePatchOp(scimPatchOp);
 
         //FIND USER FOR UPDATE
         User user = userRepository.findOneByUuid(uuid);
@@ -156,24 +157,14 @@ public class ScimUserController extends ScimBaseController {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
         }
 
-        //PARSE PATCH OP TO FIND ATTRIBUTE FOR UPDATE
-        List<Map<String, Object>> operations =
-            (List<Map<String, Object>>) scimPatchOp.get(ScimUtil.PATCHOP_PLACEHOLDER);
-        for (Map<String, Object> map : operations) {
-            if ("replace".equals(map.get("op"))) {
-                Map<String, Object> operation = (Map<String, Object>) map.get("value");
-                if (operation != null && operation.keySet().contains(ScimUtil.USER_ACTIVE)) {
-                    for (String key : operation.keySet()) {
-                        //THIS METHOD SUPPORTS CHANGE ONLY IN THE ACTIVE STATUS
-                        if (key.equals(ScimUtil.USER_ACTIVE)) {
-                            user.setActive((Boolean) operation.get(key));
-                            userRepository.save(user);
-                        }
-                    }
-                }
-            }
+        // Do Patch Op (only active flag supported currently)
+        boolean activeReplace = scimPatchOp.getOperations().get(0).getValue().getActive();
+        if (activeReplace != user.getActive()) {
+            user.setActive(activeReplace);
+            userRepository.save(user);
         }
-        return ScimUtil.userToPayload(user);
+
+        return scimConverterService.userToScimOktaIceUser(user);
     }
 
     @DeleteMapping("/{uuid}")
