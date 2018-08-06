@@ -1,9 +1,11 @@
 package com.oktaice.scim.controller.api;
 
 import com.oktaice.scim.model.Group;
+import com.oktaice.scim.model.ScimGroup;
 import com.oktaice.scim.model.ScimPageFilter;
 import com.oktaice.scim.repository.GroupRepository;
 import com.oktaice.scim.repository.UserRepository;
+import com.oktaice.scim.service.ScimConverterService;
 import com.oktaice.scim.utils.ScimUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,10 +36,14 @@ import java.util.regex.Matcher;
 public class ScimGroupController extends ScimBaseController {
     GroupRepository groupRepository;
     UserRepository userRepository;
+    ScimConverterService scimConverterService;
 
-    public ScimGroupController(GroupRepository groupRepository, UserRepository userRepository) {
+    public ScimGroupController(
+        GroupRepository groupRepository, UserRepository userRepository, ScimConverterService scimConverterService
+    ) {
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
+        this.scimConverterService = scimConverterService;
     }
 
     @PostMapping
@@ -51,12 +57,12 @@ public class ScimGroupController extends ScimBaseController {
     }
 
     @GetMapping("/{uuid}")
-    public Map<String, Object> getGroup(@PathVariable String uuid, HttpServletResponse response) {
+    public ScimGroup getGroup(@PathVariable String uuid, HttpServletResponse response) {
         Group group = groupRepository.findOneByUuid(uuid);
         if (group == null) {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
         }
-        return ScimUtil.groupToPayload(group);
+        return scimConverterService.groupToScimGroup(group);
     }
 
     @GetMapping

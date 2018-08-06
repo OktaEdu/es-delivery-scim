@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oktaice.scim.model.Group;
 import com.oktaice.scim.model.ScimEnterpriseUser;
 import com.oktaice.scim.model.ScimExceptionResponse;
+import com.oktaice.scim.model.ScimGroup;
 import com.oktaice.scim.model.ScimListResponse;
 import com.oktaice.scim.model.ScimOktaIceUser;
 import com.oktaice.scim.model.ScimResource;
@@ -135,5 +136,27 @@ public class ScimConverterServiceImpl implements ScimConverterService {
         }
 
         return scimListResponse;
+    }
+
+    @Override
+    public ScimGroup groupToScimGroup(Group group) {
+        Assert.notNull(group, "Group must not be null");
+
+        // automatically sets schemas
+        ScimGroup scimGroup = new ScimGroup();
+
+        // flat attributes
+        scimGroup.setId(group.getUuid());
+        scimGroup.setDisplayName(group.getDisplayName());
+
+        // member attributes
+        for (User user : group.getUsers()) {
+            ScimGroup.Member member = new ScimGroup.Member();
+            member.setValue(user.getUuid());
+            member.setDisplay(user.getUserName());
+            scimGroup.getMembers().add(member);
+        }
+
+        return scimGroup;
     }
 }
