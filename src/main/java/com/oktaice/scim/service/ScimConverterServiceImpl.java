@@ -3,7 +3,6 @@ package com.oktaice.scim.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oktaice.scim.model.Group;
 import com.oktaice.scim.model.ScimEnterpriseUser;
-import com.oktaice.scim.model.ScimExceptionResponse;
 import com.oktaice.scim.model.ScimGroup;
 import com.oktaice.scim.model.ScimListResponse;
 import com.oktaice.scim.model.ScimOktaIceUser;
@@ -27,7 +26,7 @@ public class ScimConverterServiceImpl implements ScimConverterService {
     private ObjectMapper mapper = new ObjectMapper();
 
     @Override
-    public ScimResource mapToScimResource(Map<String, Object> scimRequest) {
+    public ScimUser mapToScimUser(Map<String, Object> scimRequest) {
         Assert.notNull(scimRequest, "scimRequest Map must not be null");
 
         // this will either be a ScimUSer, ScimEnterpriseUser, ScimOktaIceUser, or ScimGroup
@@ -59,7 +58,49 @@ public class ScimConverterServiceImpl implements ScimConverterService {
             return mapper.convertValue(scimRequest, ScimUser.class);
         }
 
-        return new ScimExceptionResponse("SCIM Resource not supported", "400");
+        throw new RuntimeException("SCIM Resource not supported");
+    }
+
+    @Override
+    public User scimUserToUser(ScimUser scimUser) {
+        User user = new User();
+
+        // flat attributes
+        user.setActive(scimUser.isActive());
+        user.setUserName(scimUser.getUserName());
+
+        // name attributes
+        if (scimUser.getName() != null) {
+            user.setFirstName(scimUser.getName().getGivenName());
+            user.setMiddleName(scimUser.getName().getMiddleName());
+            user.setLastName(scimUser.getName().getFamilyName());
+        }
+
+        // email attributes
+        for (ScimUser.Email email : scimUser.getEmails()) {
+            if ("work".equals(email.getType())) {
+                user.setEmail(email.getValue());
+            }
+        }
+
+        // enterprise attributes
+        if (
+            scimUser instanceof ScimEnterpriseUser && ((ScimEnterpriseUser) scimUser).getEnterpriseAttributes() != null
+        ) {
+            ScimEnterpriseUser scimEnterpriseUser = (ScimEnterpriseUser) scimUser;
+            user.setCostCenter(scimEnterpriseUser.getEnterpriseAttributes().getCostCenter());
+            user.setEmployeeNumber(scimEnterpriseUser.getEnterpriseAttributes().getEmployeeNumber());
+        }
+
+        // okta ice attributes
+        if (
+            scimUser instanceof ScimOktaIceUser && ((ScimOktaIceUser) scimUser).getOktaIceAttributes() != null
+        ) {
+            ScimOktaIceUser scimOktaIceUser = (ScimOktaIceUser) scimUser;
+            user.setFavoriteIceCream(scimOktaIceUser.getOktaIceAttributes().getIceCream());
+        }
+
+        return user;
     }
 
     @Override
@@ -91,23 +132,33 @@ public class ScimConverterServiceImpl implements ScimConverterService {
         scimOktaIceUser.setEmails(emails);
 
         // group(s) attribute
-        for (Group group : user.getGroups()) {
-            ScimUser.Group scimUserGroup = new ScimUser.Group();
-            scimUserGroup.setDisplay(group.getDisplayName());
-            scimUserGroup.setValue(group.getUuid());
-            scimOktaIceUser.getGroups().add(scimUserGroup);
+        if (user.getGroups() != null) {
+            for (Group group : user.getGroups()) {
+                ScimUser.Group scimUserGroup = new ScimUser.Group();
+                scimUserGroup.setDisplay(group.getDisplayName());
+                scimUserGroup.setValue(group.getUuid());
+                scimOktaIceUser.getGroups().add(scimUserGroup);
+            }
         }
 
         // enterprise attributes
-        ScimEnterpriseUser.EnterpriseAttributes enterpriseAttributes = new ScimEnterpriseUser.EnterpriseAttributes();
-        enterpriseAttributes.setEmployeeNumber(user.getEmployeeNumber());
-        enterpriseAttributes.setCostCenter(user.getCostCenter());
-        scimOktaIceUser.setEnterpriseAttributes(enterpriseAttributes);
+        if (user.getCostCenter() != null || user.getEmployeeNumber() != null) {
+            ScimEnterpriseUser.EnterpriseAttributes enterpriseAttributes = new ScimEnterpriseUser.EnterpriseAttributes();
+            enterpriseAttributes.setEmployeeNumber(user.getEmployeeNumber());
+            enterpriseAttributes.setCostCenter(user.getCostCenter());
+            scimOktaIceUser.setEnterpriseAttributes(enterpriseAttributes);
+        } else {
+            scimOktaIceUser.getSchemas().remove(SCHEMA_USER_ENTERPRISE);
+        }
 
         // okta ice attributes
-        ScimOktaIceUser.OktaIceAttributes oktaIceAttributes = new ScimOktaIceUser.OktaIceAttributes();
-        oktaIceAttributes.setIceCream(user.getFavoriteIceCream());
-        scimOktaIceUser.setOktaIceAttributes(oktaIceAttributes);
+        if (user.getFavoriteIceCream() != null) {
+            ScimOktaIceUser.OktaIceAttributes oktaIceAttributes = new ScimOktaIceUser.OktaIceAttributes();
+            oktaIceAttributes.setIceCream(user.getFavoriteIceCream());
+            scimOktaIceUser.setOktaIceAttributes(oktaIceAttributes);
+        } else {
+            scimOktaIceUser.getSchemas().remove(SCHEMA_USER_OKTA_ICE);
+        }
 
         // meta attributes
         ScimResource.Meta meta = new ScimResource.Meta();

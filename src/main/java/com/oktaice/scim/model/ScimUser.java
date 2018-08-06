@@ -13,7 +13,7 @@ public class ScimUser extends ScimResource {
     private boolean active;
     private String userName;
     private Name name;
-    private List<Email> emails;
+    private List<Email> emails = new ArrayList<>();
     private List<Group> groups = new ArrayList<>();
 
     public ScimUser() {

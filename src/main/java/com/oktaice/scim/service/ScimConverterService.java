@@ -4,7 +4,7 @@ import com.oktaice.scim.model.Group;
 import com.oktaice.scim.model.ScimGroup;
 import com.oktaice.scim.model.ScimListResponse;
 import com.oktaice.scim.model.ScimOktaIceUser;
-import com.oktaice.scim.model.ScimResource;
+import com.oktaice.scim.model.ScimUser;
 import com.oktaice.scim.model.User;
 
 import java.util.List;
@@ -14,7 +14,8 @@ public interface ScimConverterService {
 
     String USERS_LOCATION_BASE = "/scim/v2/Users";
 
-    ScimResource mapToScimResource(Map<String, Object> scimRequest);
+    ScimUser mapToScimUser(Map<String, Object> scimRequest);
+    User scimUserToUser(ScimUser scimUser);
 
     ScimOktaIceUser userToScimOktaIceUser(User user);
     ScimListResponse usersToListResponse(List<User> users, Integer startIndex, Integer pageCount);

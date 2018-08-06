@@ -4,6 +4,7 @@ import com.oktaice.scim.model.Group;
 import com.oktaice.scim.model.ScimListResponse;
 import com.oktaice.scim.model.ScimOktaIceUser;
 import com.oktaice.scim.model.ScimPageFilter;
+import com.oktaice.scim.model.ScimUser;
 import com.oktaice.scim.model.User;
 import com.oktaice.scim.repository.UserRepository;
 import com.oktaice.scim.service.ScimConverterService;
@@ -44,13 +45,14 @@ public class ScimUserController extends ScimBaseController {
     }
 
     @PostMapping
-    public @ResponseBody Map<String, Object> createUser(
+    public @ResponseBody ScimUser createUser(
         @RequestBody Map<String, Object> scimRequest, HttpServletResponse response
     ) {
-        User newUser = ScimUtil.toUser(scimRequest);
+        ScimUser scimUser = scimConverterService.mapToScimUser(scimRequest);
+        User newUser = scimConverterService.scimUserToUser(scimUser);
         userRepository.save(newUser);
         response.setStatus(HttpStatus.CREATED.value());
-        return ScimUtil.userToPayload(newUser);
+        return scimConverterService.userToScimOktaIceUser(newUser);
     }
 
     @GetMapping("/{uuid}")

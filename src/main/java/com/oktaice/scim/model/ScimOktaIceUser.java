@@ -1,5 +1,6 @@
 package com.oktaice.scim.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -11,6 +12,7 @@ public class ScimOktaIceUser extends ScimEnterpriseUser {
 
     public static final String SCHEMA_USER_OKTA_ICE = SCHEMA_BASE + ":extension:ice:2.0:User";
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty(SCHEMA_USER_OKTA_ICE)
     private OktaIceAttributes oktaIceAttributes;
 

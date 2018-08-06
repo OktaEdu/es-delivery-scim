@@ -1,5 +1,6 @@
 package com.oktaice.scim.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -10,6 +11,7 @@ public class ScimEnterpriseUser extends ScimUser {
 
     public static final String SCHEMA_USER_ENTERPRISE = SCHEMA_BASE + ":extension:enterprise:2.0:User";
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty(SCHEMA_USER_ENTERPRISE)
     private EnterpriseAttributes enterpriseAttributes;
 
