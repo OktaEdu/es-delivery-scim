@@ -48,13 +48,11 @@ public class ScimGroupController extends ScimBaseController {
     }
 
     @PostMapping
-    public @ResponseBody Map<String, Object> createGroup(
-        @RequestBody Map<String, Object> params, HttpServletResponse response
-    ) {
-        Group newGroup = ScimUtil.toGroup(params, userRepository);
+    public @ResponseBody ScimGroup createGroup(@RequestBody ScimGroup scimGroup, HttpServletResponse response) {
+        Group newGroup = scimService.scimGroupToGroup(scimGroup);
         groupRepository.save(newGroup);
         response.setStatus(201);
-        return ScimUtil.groupToPayload(newGroup);
+        return scimService.groupToScimGroup(newGroup);
     }
 
     @GetMapping("/{uuid}")

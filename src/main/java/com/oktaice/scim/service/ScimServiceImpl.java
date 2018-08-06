@@ -10,6 +10,7 @@ import com.oktaice.scim.model.ScimPatchOp;
 import com.oktaice.scim.model.ScimResource;
 import com.oktaice.scim.model.ScimUser;
 import com.oktaice.scim.model.User;
+import com.oktaice.scim.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -26,6 +27,27 @@ import static com.oktaice.scim.model.ScimUser.SCHEMA_USER_CORE;
 public class ScimServiceImpl implements ScimService {
 
     private ObjectMapper mapper = new ObjectMapper();
+
+    private UserRepository userRepository;
+
+    public ScimServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public void validatePatchOp(ScimPatchOp scimPatchOp) {
+        if (scimPatchOp.getOperations().size() == 0) {
+            throw new RuntimeException("PatchOp must contain operations.");
+        }
+
+        if (!SCHEMA_PATCH_OP.equals(scimPatchOp.getSchemas().get(0))) {
+            throw new RuntimeException("PatchOp must contain correct schema attribute.");
+        }
+
+        if (!ScimPatchOp.Operation.OPERATION_REPLACE.equals(scimPatchOp.getOperations().get(0).getOp())) {
+            throw new RuntimeException("Only 'replace' operation supported for PatchOp.");
+        }
+    }
 
     @SuppressWarnings("unchecked")
     @Override
@@ -107,21 +129,6 @@ public class ScimServiceImpl implements ScimService {
     }
 
     @Override
-    public void validatePatchOp(ScimPatchOp scimPatchOp) {
-        if (scimPatchOp.getOperations().size() == 0) {
-            throw new RuntimeException("PatchOp must contain operations.");
-        }
-
-        if (!SCHEMA_PATCH_OP.equals(scimPatchOp.getSchemas().get(0))) {
-            throw new RuntimeException("PatchOp must contain correct schema attribute.");
-        }
-
-        if (!ScimPatchOp.Operation.OPERATION_REPLACE.equals(scimPatchOp.getOperations().get(0).getOp())) {
-            throw new RuntimeException("Only 'replace' operation supported for PatchOp.");
-        }
-    }
-
-    @Override
     public ScimOktaIceUser userToScimOktaIceUser(User user) {
         Assert.notNull(user, "User must not be null");
 
@@ -200,6 +207,22 @@ public class ScimServiceImpl implements ScimService {
         }
 
         return scimListResponse;
+    }
+
+    @Override
+    public Group scimGroupToGroup(ScimGroup scimGroup) {
+        Group group = new Group();
+
+        group.setDisplayName(scimGroup.getDisplayName());
+
+        for (ScimGroup.Member member : scimGroup.getMembers()) {
+            User user = userRepository.findOneByUuid(member.getValue());
+            if (user != null) {
+                group.getUsers().add(user);
+            }
+        }
+
+        return group;
     }
 
     @Override

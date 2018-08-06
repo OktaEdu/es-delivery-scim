@@ -15,13 +15,14 @@ public interface ScimService {
 
     String USERS_LOCATION_BASE = "/scim/v2/Users";
 
-    ScimUser mapToScimUser(Map<String, Object> scimRequest);
-    User scimUserToUser(ScimUser scimUser);
     void validatePatchOp(ScimPatchOp scimPatchOp);
 
+    ScimUser mapToScimUser(Map<String, Object> scimRequest);
+    User scimUserToUser(ScimUser scimUser);
     ScimOktaIceUser userToScimOktaIceUser(User user);
     ScimListResponse usersToListResponse(List<User> users, Integer startIndex, Integer pageCount);
 
+    Group scimGroupToGroup(ScimGroup scimGroup);
     ScimGroup groupToScimGroup(Group group);
     ScimListResponse groupsToListResponse(List<Group> groups, Integer startIndex, Integer pageCount);
 }
