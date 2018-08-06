@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oktaice.scim.model.Group;
 import com.oktaice.scim.model.ScimEnterpriseUser;
 import com.oktaice.scim.model.ScimGroup;
+import com.oktaice.scim.model.ScimGroupPatchOp;
 import com.oktaice.scim.model.ScimListResponse;
 import com.oktaice.scim.model.ScimOktaIceUser;
 import com.oktaice.scim.model.ScimPatchOp;
@@ -17,6 +18,7 @@ import org.springframework.util.Assert;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.oktaice.scim.model.ScimEnterpriseUser.SCHEMA_USER_ENTERPRISE;
 import static com.oktaice.scim.model.ScimOktaIceUser.SCHEMA_USER_OKTA_ICE;
@@ -36,16 +38,35 @@ public class ScimServiceImpl implements ScimService {
 
     @Override
     public void validatePatchOp(ScimPatchOp scimPatchOp) {
-        if (scimPatchOp.getOperations().size() == 0) {
-            throw new RuntimeException("PatchOp must contain operations.");
-        }
+        validatePatchSchemaAndOperations(scimPatchOp.getSchemas().get(0), scimPatchOp.getOperations().size());
 
-        if (!SCHEMA_PATCH_OP.equals(scimPatchOp.getSchemas().get(0))) {
+        // only replace is supported
+        if (!ScimPatchOp.Operation.OPERATION_REPLACE.equals(scimPatchOp.getOperations().get(0).getOp())) {
+            throw new RuntimeException("Only 'replace' operation supported for PatchOp.");
+        }
+    }
+
+    @Override
+    public void validateGroupPatchOp(ScimGroupPatchOp scimGroupPatchOp) {
+        validatePatchSchemaAndOperations(scimGroupPatchOp.getSchemas().get(0), scimGroupPatchOp.getOperations().size());
+
+        // only replace and add are supported
+        if (
+            !ScimGroupPatchOp.Operation.OPERATION_REPLACE.equals(scimGroupPatchOp.getOperations().get(0).getOp()) &&
+            !ScimGroupPatchOp.Operation.OPERATION_ADD.equals(scimGroupPatchOp.getOperations().get(0).getOp())
+        ) {
+            throw new RuntimeException("Only 'replace' and 'add' operations supported for Group PatchOp.");
+        }
+    }
+
+    private void validatePatchSchemaAndOperations(String schema, int numOperations) {
+        if (!SCHEMA_PATCH_OP.equals(schema)) {
             throw new RuntimeException("PatchOp must contain correct schema attribute.");
         }
 
-        if (!ScimPatchOp.Operation.OPERATION_REPLACE.equals(scimPatchOp.getOperations().get(0).getOp())) {
-            throw new RuntimeException("Only 'replace' operation supported for PatchOp.");
+
+        if (numOperations == 0) {
+            throw new RuntimeException("PatchOp must contain operations.");
         }
     }
 
@@ -247,6 +268,30 @@ public class ScimServiceImpl implements ScimService {
         }
 
         return scimGroup;
+    }
+
+    @Override
+    public void updateGroupByPatchOp(Group group, ScimGroupPatchOp scimGroupPatchOp) {
+        Assert.notNull(group, "Group cannot be null");
+        Assert.notNull(scimGroupPatchOp, "ScimGroupPatchOp cannot be null");
+
+        List<String> groupMemberUuids = group.getUsers().stream().map(User::getUuid).collect(Collectors.toList());
+
+        String operation = scimGroupPatchOp.getOperations().get(0).getOp();
+        switch (operation) {
+            case ScimGroupPatchOp.Operation.OPERATION_ADD:
+                for (ScimGroupPatchOp.Operation.Value value : scimGroupPatchOp.getOperations().get(0).getValues()) {
+                    User user = userRepository.findOneByUuid(value.getValue());
+                    if (user != null && !groupMemberUuids.contains(user.getUuid())) {
+                        group.getUsers().add(user);
+                    }
+                }
+                break;
+            case ScimGroupPatchOp.Operation.OPERATION_REPLACE:
+                break;
+            default:
+                throw new RuntimeException("Patch operation not supported: " + operation);
+        }
     }
 
     @Override

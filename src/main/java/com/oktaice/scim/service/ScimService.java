@@ -2,6 +2,7 @@ package com.oktaice.scim.service;
 
 import com.oktaice.scim.model.Group;
 import com.oktaice.scim.model.ScimGroup;
+import com.oktaice.scim.model.ScimGroupPatchOp;
 import com.oktaice.scim.model.ScimListResponse;
 import com.oktaice.scim.model.ScimOktaIceUser;
 import com.oktaice.scim.model.ScimPatchOp;
@@ -16,6 +17,7 @@ public interface ScimService {
     String USERS_LOCATION_BASE = "/scim/v2/Users";
 
     void validatePatchOp(ScimPatchOp scimPatchOp);
+    void validateGroupPatchOp(ScimGroupPatchOp scimGroupPatchOp);
 
     ScimUser mapToScimUser(Map<String, Object> scimRequest);
     User scimUserToUser(ScimUser scimUser);
@@ -24,5 +26,6 @@ public interface ScimService {
 
     Group scimGroupToGroup(ScimGroup scimGroup);
     ScimGroup groupToScimGroup(Group group);
+    void updateGroupByPatchOp(Group group, ScimGroupPatchOp scimGroupPatchOp);
     ScimListResponse groupsToListResponse(List<Group> groups, Integer startIndex, Integer pageCount);
 }

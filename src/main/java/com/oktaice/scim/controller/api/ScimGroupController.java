@@ -2,6 +2,7 @@ package com.oktaice.scim.controller.api;
 
 import com.oktaice.scim.model.Group;
 import com.oktaice.scim.model.ScimGroup;
+import com.oktaice.scim.model.ScimGroupPatchOp;
 import com.oktaice.scim.model.ScimListResponse;
 import com.oktaice.scim.model.ScimPageFilter;
 import com.oktaice.scim.repository.GroupRepository;
@@ -125,21 +126,21 @@ public class ScimGroupController extends ScimBaseController {
     }
 
     @PatchMapping("/{uuid}")
-    public @ResponseBody Map<String, Object> updateGroup(
-        @RequestBody Map<String, Object> scimPatchOp, @PathVariable String uuid, HttpServletResponse response
+    public @ResponseBody ScimGroup updateGroup(
+            @RequestBody ScimGroupPatchOp scimGroupPatchOp, @PathVariable String uuid, HttpServletResponse response
     ) {
         //CONFIRM THAT THE PATCHOP IS VALID
-        ScimUtil.validatePatchOp(scimPatchOp);
+        scimService.validateGroupPatchOp(scimGroupPatchOp);
 
         Group group = groupRepository.findOneByUuid(uuid);
         if (group == null) {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
         }
 
-        group = ScimUtil.updateGroupPatchOp(scimPatchOp, group, userRepository);
+        scimService.updateGroupByPatchOp(group, scimGroupPatchOp);
         groupRepository.save(group);
         response.setStatus(HttpStatus.OK.value());
-        return ScimUtil.groupToPayload(group);
+        return scimService.groupToScimGroup(group);
     }
 
     @DeleteMapping("/{uuid}")
