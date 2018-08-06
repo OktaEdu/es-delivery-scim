@@ -11,6 +11,7 @@ import com.oktaice.scim.utils.ScimUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -100,18 +101,27 @@ public class ScimGroupController extends ScimBaseController {
     }
 
     @PutMapping("/{uuid}")
-    public @ResponseBody Map<String, Object> replaceGroup(
-        @RequestBody Map<String, Object> scimRequest, @PathVariable String uuid, HttpServletResponse response
+    public @ResponseBody ScimGroup replaceGroup(
+        @RequestBody ScimGroup scimGroup, @PathVariable String uuid, HttpServletResponse response
     ) {
         Group group = groupRepository.findOneByUuid(uuid);
         if (group == null) {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
         }
 
-        group = ScimUtil.updateGroup(scimRequest, group, userRepository);
+        Group groupWithUpdates = scimService.scimGroupToGroup(scimGroup);
+        copyGroup(groupWithUpdates, group);
         groupRepository.save(group);
         response.setStatus(HttpStatus.OK.value());
-        return ScimUtil.groupToPayload(group);
+        return scimService.groupToScimGroup(group);
+    }
+
+    private void copyGroup(Group from, Group to) {
+        Assert.notNull(from, "From Group cannot be null");
+        Assert.notNull(to, "To Group cannot be null");
+
+        to.setDisplayName(from.getDisplayName());
+        to.setUsers(from.getUsers());
     }
 
     @PatchMapping("/{uuid}")
