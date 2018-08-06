@@ -12,6 +12,7 @@ import com.oktaice.scim.utils.ScimUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -106,7 +107,7 @@ public class ScimUserController extends ScimBaseController {
     }
 
     @PutMapping("/{uuid}")
-    public @ResponseBody Map<String, Object> replaceUser(
+    public @ResponseBody ScimOktaIceUser replaceUser(
         @RequestBody Map<String, Object> scimRequest, @PathVariable String uuid, HttpServletResponse response
     ) {
         User user = userRepository.findOneByUuid(uuid);
@@ -114,10 +115,31 @@ public class ScimUserController extends ScimBaseController {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
         }
 
-        user = ScimUtil.updateUser(scimRequest, user);
+        ScimUser scimUser = scimConverterService.mapToScimUser(scimRequest);
+        User userWithUpdates = scimConverterService.scimUserToUser(scimUser);
+        copyUser(userWithUpdates, user);
         userRepository.save(user);
         response.setStatus(HttpStatus.OK.value());
-        return ScimUtil.userToPayload(user);
+        return scimConverterService.userToScimOktaIceUser(user);
+    }
+
+    private void copyUser(User from, User to) {
+        Assert.notNull(from, "From User cannot be null");
+        Assert.notNull(to, "To User cannot be null");
+
+        to.setActive(from.getActive());
+        to.setUserName(from.getUserName());
+
+        to.setEmail(from.getEmail());
+
+        to.setLastName(from.getLastName());
+        to.setMiddleName(from.getMiddleName());
+        to.setFirstName(from.getFirstName());
+
+        to.setCostCenter(from.getCostCenter());
+        to.setEmployeeNumber(from.getEmployeeNumber());
+
+        to.setFavoriteIceCream(from.getFavoriteIceCream());
     }
 
     @SuppressWarnings("unchecked")
