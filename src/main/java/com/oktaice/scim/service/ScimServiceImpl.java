@@ -77,6 +77,8 @@ public class ScimServiceImpl implements ScimService {
         }
         if (isScimUser && isScimEnterpriseUser && isScimOktaIceUser) {
             return mapper.convertValue(scimRequest, ScimOktaIceUser.class);
+        } else if (isScimUser && isScimOktaIceUser) {
+            return mapper.convertValue(scimRequest, ScimOktaIceUser.class);
         } else if (isScimUser && isScimEnterpriseUser) {
             return mapper.convertValue(scimRequest, ScimEnterpriseUser.class);
         } else if (isScimUser) {

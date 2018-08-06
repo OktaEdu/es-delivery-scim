@@ -1,10 +1,12 @@
 package com.oktaice.scim.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ScimResource {
 
     public static final String SCHEMA_BASE = "urn:ietf:params:scim:schemas";
