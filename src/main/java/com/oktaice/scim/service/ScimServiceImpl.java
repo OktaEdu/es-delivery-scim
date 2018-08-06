@@ -23,15 +23,16 @@ import static com.oktaice.scim.model.ScimPatchOp.SCHEMA_PATCH_OP;
 import static com.oktaice.scim.model.ScimUser.SCHEMA_USER_CORE;
 
 @Service
-public class ScimConverterServiceImpl implements ScimConverterService {
+public class ScimServiceImpl implements ScimService {
 
     private ObjectMapper mapper = new ObjectMapper();
 
+    @SuppressWarnings("unchecked")
     @Override
     public ScimUser mapToScimUser(Map<String, Object> scimRequest) {
         Assert.notNull(scimRequest, "scimRequest Map must not be null");
 
-        // this will either be a ScimUSer, ScimEnterpriseUser, ScimOktaIceUser, or ScimGroup
+        // this will either be a ScimUSer, ScimEnterpriseUser, or ScimOktaIceUser
         // let's get the schemas to check
         List<String> schemas = (List<String>) scimRequest.get("schemas");
         boolean isScimUser, isScimEnterpriseUser, isScimOktaIceUser;

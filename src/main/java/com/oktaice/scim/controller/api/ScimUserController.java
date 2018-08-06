@@ -8,7 +8,7 @@ import com.oktaice.scim.model.ScimPatchOp;
 import com.oktaice.scim.model.ScimUser;
 import com.oktaice.scim.model.User;
 import com.oktaice.scim.repository.UserRepository;
-import com.oktaice.scim.service.ScimConverterService;
+import com.oktaice.scim.service.ScimService;
 import com.oktaice.scim.utils.ScimUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,29 +32,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-import static com.oktaice.scim.service.ScimConverterService.USERS_LOCATION_BASE;
+import static com.oktaice.scim.service.ScimService.USERS_LOCATION_BASE;
 
 @RestController
 @RequestMapping(USERS_LOCATION_BASE)
 public class ScimUserController extends ScimBaseController {
 
     UserRepository userRepository;
-    ScimConverterService scimConverterService;
+    ScimService scimService;
 
-    public ScimUserController(UserRepository userRepository, ScimConverterService scimConverterService) {
+    public ScimUserController(UserRepository userRepository, ScimService scimService) {
         this.userRepository = userRepository;
-        this.scimConverterService = scimConverterService;
+        this.scimService = scimService;
     }
 
     @PostMapping
     public @ResponseBody ScimUser createUser(
         @RequestBody Map<String, Object> scimRequest, HttpServletResponse response
     ) {
-        ScimUser scimUser = scimConverterService.mapToScimUser(scimRequest);
-        User newUser = scimConverterService.scimUserToUser(scimUser);
+        ScimUser scimUser = scimService.mapToScimUser(scimRequest);
+        User newUser = scimService.scimUserToUser(scimUser);
         userRepository.save(newUser);
         response.setStatus(HttpStatus.CREATED.value());
-        return scimConverterService.userToScimOktaIceUser(newUser);
+        return scimService.userToScimOktaIceUser(newUser);
     }
 
     @GetMapping("/{uuid}")
@@ -63,7 +63,7 @@ public class ScimUserController extends ScimBaseController {
         if (user == null) {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
         }
-        return scimConverterService.userToScimOktaIceUser(user);
+        return scimService.userToScimOktaIceUser(user);
     }
 
     @GetMapping
@@ -102,7 +102,7 @@ public class ScimUserController extends ScimBaseController {
         }
         //GET LIST OF USERS FROM SEARCH AND CONVERT TO SCIM FOR RESPONSE
         List<User> foundUsers = users.getContent();
-        return scimConverterService.usersToListResponse(
+        return scimService.usersToListResponse(
             foundUsers, scimPageFilter.getStartIndex(), scimPageFilter.getCount()
         );
     }
@@ -116,12 +116,12 @@ public class ScimUserController extends ScimBaseController {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
         }
 
-        ScimUser scimUser = scimConverterService.mapToScimUser(scimRequest);
-        User userWithUpdates = scimConverterService.scimUserToUser(scimUser);
+        ScimUser scimUser = scimService.mapToScimUser(scimRequest);
+        User userWithUpdates = scimService.scimUserToUser(scimUser);
         copyUser(userWithUpdates, user);
         userRepository.save(user);
         response.setStatus(HttpStatus.OK.value());
-        return scimConverterService.userToScimOktaIceUser(user);
+        return scimService.userToScimOktaIceUser(user);
     }
 
     private void copyUser(User from, User to) {
@@ -149,7 +149,7 @@ public class ScimUserController extends ScimBaseController {
         @RequestBody ScimPatchOp scimPatchOp, @PathVariable String uuid, HttpServletResponse response
     ) {
         //CONFIRM THAT THE PATCHOP IS VALID
-        scimConverterService.validatePatchOp(scimPatchOp);
+        scimService.validatePatchOp(scimPatchOp);
 
         //FIND USER FOR UPDATE
         User user = userRepository.findOneByUuid(uuid);
@@ -164,7 +164,7 @@ public class ScimUserController extends ScimBaseController {
             userRepository.save(user);
         }
 
-        return scimConverterService.userToScimOktaIceUser(user);
+        return scimService.userToScimOktaIceUser(user);
     }
 
     @DeleteMapping("/{uuid}")

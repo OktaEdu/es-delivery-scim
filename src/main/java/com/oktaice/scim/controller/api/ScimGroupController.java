@@ -6,7 +6,7 @@ import com.oktaice.scim.model.ScimListResponse;
 import com.oktaice.scim.model.ScimPageFilter;
 import com.oktaice.scim.repository.GroupRepository;
 import com.oktaice.scim.repository.UserRepository;
-import com.oktaice.scim.service.ScimConverterService;
+import com.oktaice.scim.service.ScimService;
 import com.oktaice.scim.utils.ScimUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,14 +37,14 @@ import java.util.regex.Matcher;
 public class ScimGroupController extends ScimBaseController {
     GroupRepository groupRepository;
     UserRepository userRepository;
-    ScimConverterService scimConverterService;
+    ScimService scimService;
 
     public ScimGroupController(
-        GroupRepository groupRepository, UserRepository userRepository, ScimConverterService scimConverterService
+        GroupRepository groupRepository, UserRepository userRepository, ScimService scimService
     ) {
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
-        this.scimConverterService = scimConverterService;
+        this.scimService = scimService;
     }
 
     @PostMapping
@@ -63,7 +63,7 @@ public class ScimGroupController extends ScimBaseController {
         if (group == null) {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
         }
-        return scimConverterService.groupToScimGroup(group);
+        return scimService.groupToScimGroup(group);
     }
 
     @GetMapping
@@ -96,7 +96,7 @@ public class ScimGroupController extends ScimBaseController {
 
         //GET LIST OF GROUPS FROM SEARCH AND CONVERT TO SCIM FOR RESPONSE
         List<Group> groupsFound = groups.getContent();
-        return scimConverterService.groupsToListResponse(
+        return scimService.groupsToListResponse(
             groupsFound, scimPageFilter.getStartIndex(), scimPageFilter.getCount()
         );
     }

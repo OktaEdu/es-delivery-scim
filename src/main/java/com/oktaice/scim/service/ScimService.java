@@ -11,7 +11,7 @@ import com.oktaice.scim.model.User;
 import java.util.List;
 import java.util.Map;
 
-public interface ScimConverterService {
+public interface ScimService {
 
     String USERS_LOCATION_BASE = "/scim/v2/Users";
 
