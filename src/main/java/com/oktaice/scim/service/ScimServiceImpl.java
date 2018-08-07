@@ -274,7 +274,7 @@ public class ScimServiceImpl implements ScimService {
     public void updateGroupByPatchOp(Group group, ScimGroupPatchOp scimGroupPatchOp) {
         Assert.notNull(group, "Group cannot be null");
         Assert.notNull(scimGroupPatchOp, "ScimGroupPatchOp cannot be null");
-        
+
         ScimGroupPatchOp.Operation operation = scimGroupPatchOp.getOperations().get(0);
         String opType = operation.getOp();
         switch (opType) {

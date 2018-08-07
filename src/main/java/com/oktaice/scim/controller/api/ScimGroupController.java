@@ -8,7 +8,6 @@ import com.oktaice.scim.model.ScimPageFilter;
 import com.oktaice.scim.repository.GroupRepository;
 import com.oktaice.scim.repository.UserRepository;
 import com.oktaice.scim.service.ScimService;
-import com.oktaice.scim.utils.ScimUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -28,7 +27,6 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 
 /**
@@ -80,10 +78,10 @@ public class ScimGroupController extends ScimBaseController {
             String searchValue = match.group(2);
             //IF THERE'S A VALID FILTER, USE THE PROPER METHOD FOR GROUP SEARCH
             switch (searchKeyName) {
-                case ScimUtil.GROUP_NAME:
+                case ScimPageFilter.GROUP_NAME:
                     groups = groupRepository.findByName(searchValue, pageRequest);
                     break;
-                case ScimUtil.GROUP_UUID:
+                case ScimPageFilter.GROUP_UUID:
                     groups = groupRepository.findByUuid(searchValue, pageRequest);
                     break;
                 default:

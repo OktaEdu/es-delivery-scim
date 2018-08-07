@@ -5,6 +5,14 @@ import java.util.regex.Pattern;
 
 public class ScimPageFilter {
 
+    public static final String USER_FIRST_NAME = "givenName";
+    public static final String USER_LAST_NAME = "familyName";
+    public static final String USER_USERNAME = "userName";
+    public static final String USER_ACTIVE = "active";
+
+    public static final String GROUP_UUID = "id";
+    public static final String GROUP_NAME = "displayName";
+
     private Integer startIndex = 1;
     private Integer count = 100;
     private String filter = "";

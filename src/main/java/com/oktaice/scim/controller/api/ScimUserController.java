@@ -9,7 +9,6 @@ import com.oktaice.scim.model.ScimUser;
 import com.oktaice.scim.model.User;
 import com.oktaice.scim.repository.UserRepository;
 import com.oktaice.scim.service.ScimService;
-import com.oktaice.scim.utils.ScimUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -81,16 +80,16 @@ public class ScimUserController extends ScimBaseController {
             String searchValue = match.group(2);
             //IF THERE'S A VALID FILTER, USE THE PROPER METHOD FOR USER SEARCH
             switch (searchKeyName) {
-                case ScimUtil.USER_USERNAME:
+                case ScimPageFilter.USER_USERNAME:
                     users = userRepository.findByUsername(searchValue, pageRequest);
                     break;
-                case ScimUtil.USER_ACTIVE:
+                case ScimPageFilter.USER_ACTIVE:
                     users = userRepository.findByActive(Boolean.valueOf(searchValue), pageRequest);
                     break;
-                case ScimUtil.USER_FIRST_NAME:
+                case ScimPageFilter.USER_FIRST_NAME:
                     users = userRepository.findByFirstName(searchValue, pageRequest);
                     break;
-                case ScimUtil.USER_LAST_NAME:
+                case ScimPageFilter.USER_LAST_NAME:
                     users = userRepository.findByLastName(searchValue, pageRequest);
                     break;
                 default:
