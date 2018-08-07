@@ -5,12 +5,11 @@ import com.oktaice.scim.model.ScimGroup;
 import com.oktaice.scim.model.ScimGroupPatchOp;
 import com.oktaice.scim.model.ScimListResponse;
 import com.oktaice.scim.model.ScimOktaIceUser;
-import com.oktaice.scim.model.ScimUserPatchOp;
 import com.oktaice.scim.model.ScimUser;
+import com.oktaice.scim.model.ScimUserPatchOp;
 import com.oktaice.scim.model.User;
 
 import java.util.List;
-import java.util.Map;
 
 public interface ScimService {
 
@@ -19,7 +18,6 @@ public interface ScimService {
     void validateUserPatchOp(ScimUserPatchOp scimUserPatchOp);
     void validateGroupPatchOp(ScimGroupPatchOp scimGroupPatchOp);
 
-    ScimUser mapToScimUser(Map<String, Object> scimRequest);
     User scimUserToUser(ScimUser scimUser);
     ScimOktaIceUser userToScimOktaIceUser(User user);
     ScimListResponse usersToListResponse(List<User> users, Integer startIndex, Integer pageCount);

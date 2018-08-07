@@ -47,9 +47,8 @@ public class ScimUserController extends ScimBaseController {
 
     @PostMapping
     public @ResponseBody ScimUser createUser(
-        @RequestBody Map<String, Object> scimRequest, HttpServletResponse response
+        @RequestBody ScimUser scimUser, HttpServletResponse response
     ) {
-        ScimUser scimUser = scimService.mapToScimUser(scimRequest);
         User newUser = scimService.scimUserToUser(scimUser);
         userRepository.save(newUser);
         response.setStatus(HttpStatus.CREATED.value());
@@ -108,14 +107,13 @@ public class ScimUserController extends ScimBaseController {
 
     @PutMapping("/{uuid}")
     public @ResponseBody ScimOktaIceUser replaceUser(
-        @RequestBody Map<String, Object> scimRequest, @PathVariable String uuid, HttpServletResponse response
+        @RequestBody ScimUser scimUser, @PathVariable String uuid, HttpServletResponse response
     ) {
         User user = userRepository.findOneByUuid(uuid);
         if (user == null) {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
         }
 
-        ScimUser scimUser = scimService.mapToScimUser(scimRequest);
         User userWithUpdates = scimService.scimUserToUser(scimUser);
         copyUser(userWithUpdates, user);
         userRepository.save(user);

@@ -78,45 +78,6 @@ public class ScimServiceImpl implements ScimService {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public ScimUser mapToScimUser(Map<String, Object> scimRequest) {
-        Assert.notNull(scimRequest, "scimRequest Map must not be null");
-
-        // this will either be a ScimUSer, ScimEnterpriseUser, or ScimOktaIceUser
-        // let's get the schemas to check
-        List<String> schemas = (List<String>) scimRequest.get("schemas");
-        boolean isScimUser, isScimEnterpriseUser, isScimOktaIceUser;
-        isScimUser = isScimEnterpriseUser = isScimOktaIceUser = false;
-        if (schemas != null) {
-            for (String schema : schemas) {
-                switch (schema) {
-                    case SCHEMA_USER_CORE:
-                        isScimUser = true;
-                        break;
-                    case SCHEMA_USER_ENTERPRISE:
-                        isScimEnterpriseUser = true;
-                        break;
-                    case SCHEMA_USER_OKTA_ICE:
-                        isScimOktaIceUser = true;
-                        break;
-                    default:
-                }
-            }
-        }
-        if (isScimUser && isScimEnterpriseUser && isScimOktaIceUser) {
-            return mapper.convertValue(scimRequest, ScimOktaIceUser.class);
-        } else if (isScimUser && isScimOktaIceUser) {
-            return mapper.convertValue(scimRequest, ScimOktaIceUser.class);
-        } else if (isScimUser && isScimEnterpriseUser) {
-            return mapper.convertValue(scimRequest, ScimEnterpriseUser.class);
-        } else if (isScimUser) {
-            return mapper.convertValue(scimRequest, ScimUser.class);
-        }
-
-        throw new RuntimeException("SCIM Resource not supported");
-    }
-
     @Override
     public User scimUserToUser(ScimUser scimUser) {
         User user = new User();
