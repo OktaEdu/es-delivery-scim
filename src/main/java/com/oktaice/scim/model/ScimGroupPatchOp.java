@@ -1,9 +1,15 @@
 package com.oktaice.scim.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import javassist.bytecode.annotation.MemberValue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.oktaice.scim.model.ScimPatchOp.SCHEMA_PATCH_OP;
 
@@ -32,9 +38,13 @@ public class ScimGroupPatchOp extends ScimResource {
 
         private String op;
         private String path;
+        private Object value;
 
-        @JsonProperty("value")
-        List<Value> values = new ArrayList<>();
+        @JsonIgnore
+        private ObjectMapper mapper = new ObjectMapper();
+
+        private List<MemberValue> memberValues = new ArrayList<>();
+        private GroupValue groupValue;
 
         public String getOp() {
             return op;
@@ -52,15 +62,29 @@ public class ScimGroupPatchOp extends ScimResource {
             this.path = path;
         }
 
-        public List<Value> getValues() {
-            return values;
+        public Object getValue() {
+            return value;
         }
 
-        public void setValues(List<Value> values) {
-            this.values = values;
+        public void setValue(Object value) {
+            this.value = value;
+
+            if (value instanceof Map) {
+                groupValue = mapper.convertValue(value, GroupValue.class);
+            } else if (value instanceof List) {
+                memberValues = mapper.convertValue(value, new TypeReference<List<MemberValue>>(){});
+            }
         }
 
-        public static class Value {
+        public List<MemberValue> getMemberValues() {
+            return memberValues;
+        }
+
+        public GroupValue getGroupValue() {
+            return groupValue;
+        }
+
+        public static class MemberValue {
 
             private String value;
             private String display;
@@ -79,6 +103,28 @@ public class ScimGroupPatchOp extends ScimResource {
 
             public void setDisplay(String display) {
                 this.display = display;
+            }
+        }
+
+        public static class GroupValue {
+
+            private String id;
+            private String displayName;
+
+            public String getId() {
+                return id;
+            }
+
+            public void setId(String id) {
+                this.id = id;
+            }
+
+            public String getDisplayName() {
+                return displayName;
+            }
+
+            public void setDisplayName(String displayName) {
+                this.displayName = displayName;
             }
         }
 

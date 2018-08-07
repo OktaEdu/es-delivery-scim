@@ -274,23 +274,36 @@ public class ScimServiceImpl implements ScimService {
     public void updateGroupByPatchOp(Group group, ScimGroupPatchOp scimGroupPatchOp) {
         Assert.notNull(group, "Group cannot be null");
         Assert.notNull(scimGroupPatchOp, "ScimGroupPatchOp cannot be null");
-
-        List<String> groupMemberUuids = group.getUsers().stream().map(User::getUuid).collect(Collectors.toList());
-
-        String operation = scimGroupPatchOp.getOperations().get(0).getOp();
-        switch (operation) {
+        
+        ScimGroupPatchOp.Operation operation = scimGroupPatchOp.getOperations().get(0);
+        String opType = operation.getOp();
+        switch (opType) {
             case ScimGroupPatchOp.Operation.OPERATION_ADD:
-                for (ScimGroupPatchOp.Operation.Value value : scimGroupPatchOp.getOperations().get(0).getValues()) {
-                    User user = userRepository.findOneByUuid(value.getValue());
-                    if (user != null && !groupMemberUuids.contains(user.getUuid())) {
-                        group.getUsers().add(user);
-                    }
-                }
+                doUpdateGroup(group, operation);
                 break;
             case ScimGroupPatchOp.Operation.OPERATION_REPLACE:
+                if ("members".equals(operation.getPath())) {
+                    doUpdateGroup(group, operation);
+                } else {
+                    group.setDisplayName(operation.getGroupValue().getDisplayName());
+                }
                 break;
             default:
                 throw new RuntimeException("Patch operation not supported: " + operation);
+        }
+    }
+
+    private void doUpdateGroup(Group group, ScimGroupPatchOp.Operation operation) {
+        List<String> groupMemberUuids = group.getUsers().stream().map(User::getUuid).collect(Collectors.toList());
+        if (ScimGroupPatchOp.Operation.OPERATION_REPLACE.equals(operation.getOp())) {
+            group.setUsers(new ArrayList<>());
+            groupMemberUuids = new ArrayList<>();
+        }
+        for (ScimGroupPatchOp.Operation.MemberValue memberValue : operation.getMemberValues()) {
+            User user = userRepository.findOneByUuid(memberValue.getValue());
+            if (user != null && !groupMemberUuids.contains(user.getUuid())) {
+                group.getUsers().add(user);
+            }
         }
     }
 
