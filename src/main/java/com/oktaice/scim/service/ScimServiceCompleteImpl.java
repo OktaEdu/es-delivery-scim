@@ -8,9 +8,9 @@ import com.oktaice.scim.model.ScimGroupPatchOp;
 import com.oktaice.scim.model.ScimListResponse;
 import com.oktaice.scim.model.ScimOktaIceUser;
 import com.oktaice.scim.model.ScimPatchOp;
-import com.oktaice.scim.model.ScimUserPatchOp;
 import com.oktaice.scim.model.ScimResource;
 import com.oktaice.scim.model.ScimUser;
+import com.oktaice.scim.model.ScimUserPatchOp;
 import com.oktaice.scim.model.User;
 import com.oktaice.scim.repository.UserRepository;
 import org.slf4j.Logger;
@@ -26,22 +26,22 @@ import java.util.stream.Collectors;
 
 import static com.oktaice.scim.model.ScimEnterpriseUser.SCHEMA_USER_ENTERPRISE;
 import static com.oktaice.scim.model.ScimOktaIceUser.SCHEMA_USER_OKTA_ICE;
-import static com.oktaice.scim.model.ScimUserPatchOp.SCHEMA_PATCH_OP;
 import static com.oktaice.scim.model.ScimUser.SCHEMA_USER_CORE;
+import static com.oktaice.scim.model.ScimUserPatchOp.SCHEMA_PATCH_OP;
 
 @Service
-@ConditionalOnProperty(name = "scim.service", havingValue = "wip")
-public class ScimServiceImpl implements ScimService {
+@ConditionalOnProperty(name = "scim.service", havingValue = "complete")
+public class ScimServiceCompleteImpl implements ScimService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ScimServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(ScimServiceCompleteImpl.class);
 
     private ObjectMapper mapper = new ObjectMapper();
 
     private UserRepository userRepository;
 
-    public ScimServiceImpl(UserRepository userRepository) {
+    public ScimServiceCompleteImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        logger.info("Using ScimServiceImpl...");
+        logger.info("Using ScimServiceCompleteImpl...");
     }
 
     @Override
