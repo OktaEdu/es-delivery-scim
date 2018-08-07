@@ -9,16 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.oktaice.scim.model.ScimUserPatchOp.SCHEMA_PATCH_OP;
-
-public class ScimGroupPatchOp extends ScimResource {
+public class ScimGroupPatchOp extends ScimPatchOp {
 
     @JsonProperty("Operations")
     private List<Operation> operations = new ArrayList<>();
 
     // sets patch op schema
     public ScimGroupPatchOp() {
-        getSchemas().add(SCHEMA_PATCH_OP);
+        super();
     }
 
     public List<Operation> getOperations() {
@@ -30,9 +28,6 @@ public class ScimGroupPatchOp extends ScimResource {
     }
 
     public static class Operation {
-
-        public static final String OPERATION_REPLACE = "replace";
-        public static final String OPERATION_ADD = "add";
 
         private String op;
         private String path;

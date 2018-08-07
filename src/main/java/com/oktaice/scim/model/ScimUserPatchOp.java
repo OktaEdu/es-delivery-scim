@@ -5,15 +5,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScimUserPatchOp extends ScimResource {
-
-    public static final String SCHEMA_PATCH_OP = "urn:ietf:params:scim:api:messages:2.0:PatchOp";
+public class ScimUserPatchOp extends ScimPatchOp {
 
     @JsonProperty("Operations")
     List<Operation> operations = new ArrayList<>();
 
+    // sets patch op schema
     public ScimUserPatchOp() {
-        getSchemas().add(SCHEMA_PATCH_OP);
+        super();
     }
 
     public List<Operation> getOperations() {
@@ -25,8 +24,6 @@ public class ScimUserPatchOp extends ScimResource {
     }
 
     public static class Operation {
-
-        public static final String OPERATION_REPLACE = "replace";
 
         private String op;
         private Value value;

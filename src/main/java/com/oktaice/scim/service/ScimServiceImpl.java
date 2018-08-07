@@ -7,6 +7,7 @@ import com.oktaice.scim.model.ScimGroup;
 import com.oktaice.scim.model.ScimGroupPatchOp;
 import com.oktaice.scim.model.ScimListResponse;
 import com.oktaice.scim.model.ScimOktaIceUser;
+import com.oktaice.scim.model.ScimPatchOp;
 import com.oktaice.scim.model.ScimUserPatchOp;
 import com.oktaice.scim.model.ScimResource;
 import com.oktaice.scim.model.ScimUser;
@@ -41,7 +42,7 @@ public class ScimServiceImpl implements ScimService {
         validatePatchSchemaAndOperations(scimUserPatchOp.getSchemas().get(0), scimUserPatchOp.getOperations().size());
 
         // only replace is supported
-        if (!ScimUserPatchOp.Operation.OPERATION_REPLACE.equals(scimUserPatchOp.getOperations().get(0).getOp())) {
+        if (!ScimPatchOp.OPERATION_REPLACE.equals(scimUserPatchOp.getOperations().get(0).getOp())) {
             throw new RuntimeException("Only 'replace' operation supported for PatchOp.");
         }
     }
@@ -52,8 +53,8 @@ public class ScimServiceImpl implements ScimService {
 
         // only replace and add are supported
         if (
-            !ScimGroupPatchOp.Operation.OPERATION_REPLACE.equals(scimGroupPatchOp.getOperations().get(0).getOp()) &&
-            !ScimGroupPatchOp.Operation.OPERATION_ADD.equals(scimGroupPatchOp.getOperations().get(0).getOp())
+            !ScimPatchOp.OPERATION_REPLACE.equals(scimGroupPatchOp.getOperations().get(0).getOp()) &&
+            !ScimPatchOp.OPERATION_ADD.equals(scimGroupPatchOp.getOperations().get(0).getOp())
         ) {
             throw new RuntimeException("Only 'replace' and 'add' operations supported for Group PatchOp.");
         }
@@ -278,10 +279,10 @@ public class ScimServiceImpl implements ScimService {
         ScimGroupPatchOp.Operation operation = scimGroupPatchOp.getOperations().get(0);
         String opType = operation.getOp();
         switch (opType) {
-            case ScimGroupPatchOp.Operation.OPERATION_ADD:
+            case ScimPatchOp.OPERATION_ADD:
                 doUpdateGroup(group, operation);
                 break;
-            case ScimGroupPatchOp.Operation.OPERATION_REPLACE:
+            case ScimPatchOp.OPERATION_REPLACE:
                 if ("members".equals(operation.getPath())) {
                     doUpdateGroup(group, operation);
                 } else {
@@ -295,7 +296,7 @@ public class ScimServiceImpl implements ScimService {
 
     private void doUpdateGroup(Group group, ScimGroupPatchOp.Operation operation) {
         List<String> groupMemberUuids = group.getUsers().stream().map(User::getUuid).collect(Collectors.toList());
-        if (ScimGroupPatchOp.Operation.OPERATION_REPLACE.equals(operation.getOp())) {
+        if (ScimPatchOp.OPERATION_REPLACE.equals(operation.getOp())) {
             group.setUsers(new ArrayList<>());
             groupMemberUuids = new ArrayList<>();
         }
