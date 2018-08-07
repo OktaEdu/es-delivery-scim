@@ -7,7 +7,7 @@ import com.oktaice.scim.model.ScimGroup;
 import com.oktaice.scim.model.ScimGroupPatchOp;
 import com.oktaice.scim.model.ScimListResponse;
 import com.oktaice.scim.model.ScimOktaIceUser;
-import com.oktaice.scim.model.ScimPatchOp;
+import com.oktaice.scim.model.ScimUserPatchOp;
 import com.oktaice.scim.model.ScimResource;
 import com.oktaice.scim.model.ScimUser;
 import com.oktaice.scim.model.User;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 import static com.oktaice.scim.model.ScimEnterpriseUser.SCHEMA_USER_ENTERPRISE;
 import static com.oktaice.scim.model.ScimOktaIceUser.SCHEMA_USER_OKTA_ICE;
-import static com.oktaice.scim.model.ScimPatchOp.SCHEMA_PATCH_OP;
+import static com.oktaice.scim.model.ScimUserPatchOp.SCHEMA_PATCH_OP;
 import static com.oktaice.scim.model.ScimUser.SCHEMA_USER_CORE;
 
 @Service
@@ -37,11 +37,11 @@ public class ScimServiceImpl implements ScimService {
     }
 
     @Override
-    public void validatePatchOp(ScimPatchOp scimPatchOp) {
-        validatePatchSchemaAndOperations(scimPatchOp.getSchemas().get(0), scimPatchOp.getOperations().size());
+    public void validateUserPatchOp(ScimUserPatchOp scimUserPatchOp) {
+        validatePatchSchemaAndOperations(scimUserPatchOp.getSchemas().get(0), scimUserPatchOp.getOperations().size());
 
         // only replace is supported
-        if (!ScimPatchOp.Operation.OPERATION_REPLACE.equals(scimPatchOp.getOperations().get(0).getOp())) {
+        if (!ScimUserPatchOp.Operation.OPERATION_REPLACE.equals(scimUserPatchOp.getOperations().get(0).getOp())) {
             throw new RuntimeException("Only 'replace' operation supported for PatchOp.");
         }
     }

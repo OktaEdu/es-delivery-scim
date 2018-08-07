@@ -1,17 +1,15 @@
 package com.oktaice.scim.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javassist.bytecode.annotation.MemberValue;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.oktaice.scim.model.ScimPatchOp.SCHEMA_PATCH_OP;
+import static com.oktaice.scim.model.ScimUserPatchOp.SCHEMA_PATCH_OP;
 
 public class ScimGroupPatchOp extends ScimResource {
 

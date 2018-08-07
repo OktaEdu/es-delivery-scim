@@ -5,7 +5,7 @@ import com.oktaice.scim.model.ScimGroup;
 import com.oktaice.scim.model.ScimGroupPatchOp;
 import com.oktaice.scim.model.ScimListResponse;
 import com.oktaice.scim.model.ScimOktaIceUser;
-import com.oktaice.scim.model.ScimPatchOp;
+import com.oktaice.scim.model.ScimUserPatchOp;
 import com.oktaice.scim.model.ScimUser;
 import com.oktaice.scim.model.User;
 
@@ -16,7 +16,7 @@ public interface ScimService {
 
     String USERS_LOCATION_BASE = "/scim/v2/Users";
 
-    void validatePatchOp(ScimPatchOp scimPatchOp);
+    void validateUserPatchOp(ScimUserPatchOp scimUserPatchOp);
     void validateGroupPatchOp(ScimGroupPatchOp scimGroupPatchOp);
 
     ScimUser mapToScimUser(Map<String, Object> scimRequest);

@@ -4,7 +4,7 @@ import com.oktaice.scim.model.Group;
 import com.oktaice.scim.model.ScimListResponse;
 import com.oktaice.scim.model.ScimOktaIceUser;
 import com.oktaice.scim.model.ScimPageFilter;
-import com.oktaice.scim.model.ScimPatchOp;
+import com.oktaice.scim.model.ScimUserPatchOp;
 import com.oktaice.scim.model.ScimUser;
 import com.oktaice.scim.model.User;
 import com.oktaice.scim.repository.UserRepository;
@@ -145,10 +145,10 @@ public class ScimUserController extends ScimBaseController {
     @SuppressWarnings("unchecked")
     @PatchMapping("/{uuid}")
     public @ResponseBody ScimOktaIceUser updateUser(
-        @RequestBody ScimPatchOp scimPatchOp, @PathVariable String uuid, HttpServletResponse response
+            @RequestBody ScimUserPatchOp scimUserPatchOp, @PathVariable String uuid, HttpServletResponse response
     ) {
         //CONFIRM THAT THE PATCHOP IS VALID
-        scimService.validatePatchOp(scimPatchOp);
+        scimService.validateUserPatchOp(scimUserPatchOp);
 
         //FIND USER FOR UPDATE
         User user = userRepository.findOneByUuid(uuid);
@@ -157,7 +157,7 @@ public class ScimUserController extends ScimBaseController {
         }
 
         // Do Patch Op (only active flag supported currently)
-        boolean activeReplace = scimPatchOp.getOperations().get(0).getValue().getActive();
+        boolean activeReplace = scimUserPatchOp.getOperations().get(0).getValue().getActive();
         if (activeReplace != user.getActive()) {
             user.setActive(activeReplace);
             userRepository.save(user);
