@@ -4,8 +4,8 @@ import com.oktaice.scim.model.Group;
 import com.oktaice.scim.model.ScimListResponse;
 import com.oktaice.scim.model.ScimOktaIceUser;
 import com.oktaice.scim.model.ScimPageFilter;
-import com.oktaice.scim.model.ScimUserPatchOp;
 import com.oktaice.scim.model.ScimUser;
+import com.oktaice.scim.model.ScimUserPatchOp;
 import com.oktaice.scim.model.User;
 import com.oktaice.scim.repository.UserRepository;
 import com.oktaice.scim.service.ScimService;
@@ -28,7 +28,6 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 
 import static com.oktaice.scim.service.ScimService.USERS_LOCATION_BASE;
@@ -143,7 +142,7 @@ public class ScimUserController extends ScimBaseController {
     @SuppressWarnings("unchecked")
     @PatchMapping("/{uuid}")
     public @ResponseBody ScimOktaIceUser updateUser(
-            @RequestBody ScimUserPatchOp scimUserPatchOp, @PathVariable String uuid, HttpServletResponse response
+        @RequestBody ScimUserPatchOp scimUserPatchOp, @PathVariable String uuid, HttpServletResponse response
     ) {
         //CONFIRM THAT THE PATCHOP IS VALID
         scimService.validateUserPatchOp(scimUserPatchOp);

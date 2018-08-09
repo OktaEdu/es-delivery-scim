@@ -125,7 +125,7 @@ public class ScimGroupController extends ScimBaseController {
 
     @PatchMapping("/{uuid}")
     public @ResponseBody ScimGroup updateGroup(
-            @RequestBody ScimGroupPatchOp scimGroupPatchOp, @PathVariable String uuid, HttpServletResponse response
+        @RequestBody ScimGroupPatchOp scimGroupPatchOp, @PathVariable String uuid, HttpServletResponse response
     ) {
         //CONFIRM THAT THE PATCHOP IS VALID
         scimService.validateGroupPatchOp(scimGroupPatchOp);
