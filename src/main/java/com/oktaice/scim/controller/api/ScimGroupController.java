@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.regex.Matcher;
 
@@ -48,15 +48,15 @@ public class ScimGroupController extends ScimBaseController {
     }
 
     @PostMapping
-    public @ResponseBody ScimGroup createGroup(@RequestBody ScimGroup scimGroup, HttpServletResponse response) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public @ResponseBody ScimGroup createGroup(@RequestBody ScimGroup scimGroup) {
         Group newGroup = scimService.scimGroupToGroup(scimGroup);
         groupRepository.save(newGroup);
-        response.setStatus(201);
         return scimService.groupToScimGroup(newGroup);
     }
 
     @GetMapping("/{uuid}")
-    public ScimGroup getGroup(@PathVariable String uuid, HttpServletResponse response) {
+    public ScimGroup getGroup(@PathVariable String uuid) {
         Group group = groupRepository.findOneByUuid(uuid);
         if (group == null) {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
@@ -100,9 +100,7 @@ public class ScimGroupController extends ScimBaseController {
     }
 
     @PutMapping("/{uuid}")
-    public @ResponseBody ScimGroup replaceGroup(
-        @RequestBody ScimGroup scimGroup, @PathVariable String uuid, HttpServletResponse response
-    ) {
+    public @ResponseBody ScimGroup replaceGroup(@RequestBody ScimGroup scimGroup, @PathVariable String uuid) {
         Group group = groupRepository.findOneByUuid(uuid);
         if (group == null) {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
@@ -111,7 +109,6 @@ public class ScimGroupController extends ScimBaseController {
         Group groupWithUpdates = scimService.scimGroupToGroup(scimGroup);
         copyGroup(groupWithUpdates, group);
         groupRepository.save(group);
-        response.setStatus(HttpStatus.OK.value());
         return scimService.groupToScimGroup(group);
     }
 
@@ -125,7 +122,7 @@ public class ScimGroupController extends ScimBaseController {
 
     @PatchMapping("/{uuid}")
     public @ResponseBody ScimGroup updateGroup(
-        @RequestBody ScimGroupPatchOp scimGroupPatchOp, @PathVariable String uuid, HttpServletResponse response
+        @RequestBody ScimGroupPatchOp scimGroupPatchOp, @PathVariable String uuid
     ) {
         //CONFIRM THAT THE PATCHOP IS VALID
         scimService.validateGroupPatchOp(scimGroupPatchOp);
@@ -137,18 +134,17 @@ public class ScimGroupController extends ScimBaseController {
 
         scimService.updateGroupByPatchOp(group, scimGroupPatchOp);
         groupRepository.save(group);
-        response.setStatus(HttpStatus.OK.value());
         return scimService.groupToScimGroup(group);
     }
 
     @DeleteMapping("/{uuid}")
-    public void deleteGroup(@PathVariable String uuid, HttpServletResponse response) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteGroup(@PathVariable String uuid) {
         Group group = groupRepository.findOneByUuid(uuid);
         if (group == null) {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
         }
 
         groupRepository.delete(group);
-        response.setStatus(HttpStatus.NO_CONTENT.value());
     }
 }

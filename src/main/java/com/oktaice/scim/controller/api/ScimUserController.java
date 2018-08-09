@@ -23,10 +23,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.regex.Matcher;
 
@@ -45,17 +45,15 @@ public class ScimUserController extends ScimBaseController {
     }
 
     @PostMapping
-    public @ResponseBody ScimUser createUser(
-        @RequestBody ScimUser scimUser, HttpServletResponse response
-    ) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public @ResponseBody ScimUser createUser(@RequestBody ScimUser scimUser) {
         User newUser = scimService.scimUserToUser(scimUser);
         userRepository.save(newUser);
-        response.setStatus(HttpStatus.CREATED.value());
         return scimService.userToScimOktaIceUser(newUser);
     }
 
     @GetMapping("/{uuid}")
-    public @ResponseBody ScimOktaIceUser getUser(@PathVariable String uuid, HttpServletResponse response) {
+    public @ResponseBody ScimOktaIceUser getUser(@PathVariable String uuid) {
         User user = userRepository.findOneByUuid(uuid);
         if (user == null) {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
@@ -105,9 +103,7 @@ public class ScimUserController extends ScimBaseController {
     }
 
     @PutMapping("/{uuid}")
-    public @ResponseBody ScimOktaIceUser replaceUser(
-        @RequestBody ScimUser scimUser, @PathVariable String uuid, HttpServletResponse response
-    ) {
+    public @ResponseBody ScimOktaIceUser replaceUser(@RequestBody ScimUser scimUser, @PathVariable String uuid) {
         User user = userRepository.findOneByUuid(uuid);
         if (user == null) {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
@@ -116,7 +112,6 @@ public class ScimUserController extends ScimBaseController {
         User userWithUpdates = scimService.scimUserToUser(scimUser);
         copyUser(userWithUpdates, user);
         userRepository.save(user);
-        response.setStatus(HttpStatus.OK.value());
         return scimService.userToScimOktaIceUser(user);
     }
 
@@ -142,7 +137,7 @@ public class ScimUserController extends ScimBaseController {
     @SuppressWarnings("unchecked")
     @PatchMapping("/{uuid}")
     public @ResponseBody ScimOktaIceUser updateUser(
-        @RequestBody ScimUserPatchOp scimUserPatchOp, @PathVariable String uuid, HttpServletResponse response
+        @RequestBody ScimUserPatchOp scimUserPatchOp, @PathVariable String uuid
     ) {
         //CONFIRM THAT THE PATCHOP IS VALID
         scimService.validateUserPatchOp(scimUserPatchOp);
@@ -164,7 +159,8 @@ public class ScimUserController extends ScimBaseController {
     }
 
     @DeleteMapping("/{uuid}")
-    public void deleteUser(@PathVariable String uuid, HttpServletResponse response) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(@PathVariable String uuid) {
         User user = userRepository.findOneByUuid(uuid);
         if (user == null) {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
@@ -177,7 +173,6 @@ public class ScimUserController extends ScimBaseController {
 
         //delete user
         userRepository.delete(user);
-        response.setStatus(HttpStatus.NO_CONTENT.value());
     }
 }
 
