@@ -31,6 +31,7 @@ import static com.oktaice.scim.model.ScimUserPatchOp.SCHEMA_PATCH_OP;
 
 @Service
 @ConditionalOnProperty(name = "scim.service", havingValue = "complete")
+@SuppressWarnings("Duplicates")
 public class ScimServiceCompleteImpl implements ScimService {
 
     private static final Logger logger = LoggerFactory.getLogger(ScimServiceCompleteImpl.class);
