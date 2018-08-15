@@ -41,4 +41,16 @@ public class ScimOktaIceUser extends ScimEnterpriseUser {
             this.iceCream = iceCream;
         }
     }
+
+    public static void main(String[] args) {
+
+        ScimUser scimUser = new ScimUser();
+        System.out.println("scimUser schemas: " + scimUser.getSchemas());
+
+        ScimEnterpriseUser scimEnterpriseUser = new ScimEnterpriseUser();
+        System.out.println("scimEnterpriseUser schemas: " + scimEnterpriseUser.getSchemas());
+
+        ScimOktaIceUser scimOktaIceUser = new ScimOktaIceUser();
+        System.out.println("scimOktaIceUser schemas: " + scimOktaIceUser.getSchemas());
+    }
 }
