@@ -1,11 +1,11 @@
-package com.oktaice.scim.controller.api;
+package com.oktaice.scim.controller.api.scim;
 
 import com.oktaice.scim.model.Group;
-import com.oktaice.scim.model.ScimListResponse;
-import com.oktaice.scim.model.ScimOktaIceUser;
-import com.oktaice.scim.model.ScimPageFilter;
-import com.oktaice.scim.model.ScimUser;
-import com.oktaice.scim.model.ScimUserPatchOp;
+import com.oktaice.scim.model.scim.ScimListResponse;
+import com.oktaice.scim.model.scim.ScimOktaIceUser;
+import com.oktaice.scim.model.scim.support.ScimPageFilter;
+import com.oktaice.scim.model.scim.ScimUser;
+import com.oktaice.scim.model.scim.ScimUserPatchOp;
 import com.oktaice.scim.model.User;
 import com.oktaice.scim.repository.UserRepository;
 import com.oktaice.scim.service.ScimService;

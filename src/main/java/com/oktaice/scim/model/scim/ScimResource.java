@@ -1,4 +1,4 @@
-package com.oktaice.scim.model;
+package com.oktaice.scim.model.scim;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;

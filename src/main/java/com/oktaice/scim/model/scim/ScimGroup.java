@@ -1,4 +1,4 @@
-package com.oktaice.scim.model;
+package com.oktaice.scim.model.scim;
 
 import java.util.ArrayList;
 import java.util.List;

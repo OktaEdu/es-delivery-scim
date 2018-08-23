@@ -1,6 +1,6 @@
-package com.oktaice.scim.controller.api;
+package com.oktaice.scim.controller.api.scim;
 
-import com.oktaice.scim.model.ScimExceptionResponse;
+import com.oktaice.scim.model.scim.ScimExceptionResponse;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;

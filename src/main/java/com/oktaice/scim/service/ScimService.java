@@ -1,12 +1,12 @@
 package com.oktaice.scim.service;
 
 import com.oktaice.scim.model.Group;
-import com.oktaice.scim.model.ScimGroup;
-import com.oktaice.scim.model.ScimGroupPatchOp;
-import com.oktaice.scim.model.ScimListResponse;
-import com.oktaice.scim.model.ScimOktaIceUser;
-import com.oktaice.scim.model.ScimUser;
-import com.oktaice.scim.model.ScimUserPatchOp;
+import com.oktaice.scim.model.scim.ScimGroup;
+import com.oktaice.scim.model.scim.ScimGroupPatchOp;
+import com.oktaice.scim.model.scim.ScimListResponse;
+import com.oktaice.scim.model.scim.ScimOktaIceUser;
+import com.oktaice.scim.model.scim.ScimUser;
+import com.oktaice.scim.model.scim.ScimUserPatchOp;
 import com.oktaice.scim.model.User;
 
 import java.util.List;

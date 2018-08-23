@@ -1,15 +1,15 @@
 package com.oktaice.scim.service;
 
 import com.oktaice.scim.model.Group;
-import com.oktaice.scim.model.ScimEnterpriseUser;
-import com.oktaice.scim.model.ScimGroup;
-import com.oktaice.scim.model.ScimGroupPatchOp;
-import com.oktaice.scim.model.ScimListResponse;
-import com.oktaice.scim.model.ScimOktaIceUser;
-import com.oktaice.scim.model.ScimPatchOp;
-import com.oktaice.scim.model.ScimResource;
-import com.oktaice.scim.model.ScimUser;
-import com.oktaice.scim.model.ScimUserPatchOp;
+import com.oktaice.scim.model.scim.ScimEnterpriseUser;
+import com.oktaice.scim.model.scim.ScimGroup;
+import com.oktaice.scim.model.scim.ScimGroupPatchOp;
+import com.oktaice.scim.model.scim.ScimListResponse;
+import com.oktaice.scim.model.scim.ScimOktaIceUser;
+import com.oktaice.scim.model.scim.ScimPatchOp;
+import com.oktaice.scim.model.scim.ScimResource;
+import com.oktaice.scim.model.scim.ScimUser;
+import com.oktaice.scim.model.scim.ScimUserPatchOp;
 import com.oktaice.scim.model.User;
 import com.oktaice.scim.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.oktaice.scim.model.ScimEnterpriseUser.SCHEMA_USER_ENTERPRISE;
-import static com.oktaice.scim.model.ScimOktaIceUser.SCHEMA_USER_OKTA_ICE;
-import static com.oktaice.scim.model.ScimUserPatchOp.SCHEMA_PATCH_OP;
+import static com.oktaice.scim.model.scim.ScimEnterpriseUser.SCHEMA_USER_ENTERPRISE;
+import static com.oktaice.scim.model.scim.ScimOktaIceUser.SCHEMA_USER_OKTA_ICE;
+import static com.oktaice.scim.model.scim.ScimUserPatchOp.SCHEMA_PATCH_OP;
 
 @Service
 public class ScimServiceImpl implements ScimService {
