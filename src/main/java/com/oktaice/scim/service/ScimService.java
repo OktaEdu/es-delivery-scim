@@ -14,6 +14,7 @@ import java.util.List;
 public interface ScimService {
 
     String USERS_LOCATION_BASE = "/scim/v2/Users";
+    String GROUPS_LOCATION_BASE = "/scim/v2/Groups";
 
     void validateUserPatchOp(ScimUserPatchOp scimUserPatchOp);
     void validateGroupPatchOp(ScimGroupPatchOp scimGroupPatchOp);

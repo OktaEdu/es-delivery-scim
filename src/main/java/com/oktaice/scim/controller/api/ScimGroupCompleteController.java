@@ -38,23 +38,23 @@ import static com.oktaice.scim.service.ScimService.GROUPS_LOCATION_BASE;
  * SCIM API for group management
  */
 @RestController
-@ConditionalOnProperty(name = "scim.service", havingValue = "wip")
+@ConditionalOnProperty(name = "scim.service", havingValue = "complete")
 @RequestMapping(GROUPS_LOCATION_BASE)
-public class ScimGroupController extends ScimBaseController {
+public class ScimGroupCompleteController extends ScimBaseController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ScimGroupController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ScimGroupCompleteController.class);
 
     GroupRepository groupRepository;
     UserRepository userRepository;
     ScimService scimService;
 
-    public ScimGroupController(
+    public ScimGroupCompleteController(
         GroupRepository groupRepository, UserRepository userRepository, ScimService scimService
     ) {
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
         this.scimService = scimService;
-        logger.info("Using ScimGroupController...");
+        logger.info("Using ScimGroupCompleteController...");
     }
 
     @PostMapping

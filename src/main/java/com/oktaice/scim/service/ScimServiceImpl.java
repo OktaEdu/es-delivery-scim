@@ -1,6 +1,5 @@
 package com.oktaice.scim.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oktaice.scim.model.Group;
 import com.oktaice.scim.model.ScimEnterpriseUser;
 import com.oktaice.scim.model.ScimGroup;
@@ -8,40 +7,29 @@ import com.oktaice.scim.model.ScimGroupPatchOp;
 import com.oktaice.scim.model.ScimListResponse;
 import com.oktaice.scim.model.ScimOktaIceUser;
 import com.oktaice.scim.model.ScimPatchOp;
-import com.oktaice.scim.model.ScimUserPatchOp;
 import com.oktaice.scim.model.ScimResource;
 import com.oktaice.scim.model.ScimUser;
+import com.oktaice.scim.model.ScimUserPatchOp;
 import com.oktaice.scim.model.User;
 import com.oktaice.scim.repository.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.oktaice.scim.model.ScimEnterpriseUser.SCHEMA_USER_ENTERPRISE;
 import static com.oktaice.scim.model.ScimOktaIceUser.SCHEMA_USER_OKTA_ICE;
 import static com.oktaice.scim.model.ScimUserPatchOp.SCHEMA_PATCH_OP;
-import static com.oktaice.scim.model.ScimUser.SCHEMA_USER_CORE;
 
 @Service
-@ConditionalOnProperty(name = "scim.service", havingValue = "wip")
 public class ScimServiceImpl implements ScimService {
-
-    private static final Logger logger = LoggerFactory.getLogger(ScimServiceImpl.class);
-
-    private ObjectMapper mapper = new ObjectMapper();
 
     private UserRepository userRepository;
 
     public ScimServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        logger.info("Using ScimServiceImpl...");
     }
 
     @Override

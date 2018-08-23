@@ -36,19 +36,19 @@ import java.util.regex.Matcher;
 import static com.oktaice.scim.service.ScimService.USERS_LOCATION_BASE;
 
 @RestController
-@ConditionalOnProperty(name = "scim.service", havingValue = "wip")
+@ConditionalOnProperty(name = "scim.service", havingValue = "complete")
 @RequestMapping(USERS_LOCATION_BASE)
-public class ScimUserController extends ScimBaseController {
+public class ScimUserCompleteController extends ScimBaseController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ScimUserController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ScimUserCompleteController.class);
 
     UserRepository userRepository;
     ScimService scimService;
 
-    public ScimUserController(UserRepository userRepository, ScimService scimService) {
+    public ScimUserCompleteController(UserRepository userRepository, ScimService scimService) {
         this.userRepository = userRepository;
         this.scimService = scimService;
-        logger.info("Using ScimUserController...");
+        logger.info("Using ScimUserCompleteController...");
     }
 
     @PostMapping
