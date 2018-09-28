@@ -224,6 +224,12 @@ public class ScimServiceImpl implements ScimService {
             scimGroup.getMembers().add(member);
         }
 
+        // meta attributes
+        ScimResource.Meta meta = new ScimResource.Meta();
+        meta.setResourceType(ScimResource.Meta.RESOURCE_TYPE_GROUP);
+        meta.setLocation(GROUPS_LOCATION_BASE + "/" + group.getUuid());
+        scimGroup.setMeta(meta);
+
         return scimGroup;
     }
 
