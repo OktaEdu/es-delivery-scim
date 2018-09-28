@@ -51,21 +51,14 @@ public class ScimUserController extends ScimBaseController {
         logger.info("Using ScimUserController...");
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public @ResponseBody ScimUser createUser(@RequestBody ScimUser scimUser) {
-        User newUser = scimService.scimUserToUser(scimUser);
-        userRepository.save(newUser);
-        return scimService.userToScimOktaIceUser(newUser);
-    }
-
     @GetMapping("/{uuid}")
     public @ResponseBody ScimOktaIceUser getUser(@PathVariable String uuid) {
-        User user = userRepository.findOneByUuid(uuid);
-        if (user == null) {
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
-        }
-        return scimService.userToScimOktaIceUser(user);
+        //THIS IS THE LINE TO DELETE
+        return new ScimOktaIceUser();
+        //SEARCHES A USER BY ITS UUID
+
+        //RETURNS THE USER INFORMATION AND CONVERT IT TO A SCIM USER
+
     }
 
     @GetMapping
@@ -103,10 +96,18 @@ public class ScimUserController extends ScimBaseController {
             users = userRepository.findAll(pageRequest);
         }
         //GET LIST OF USERS FROM SEARCH AND CONVERT TO SCIM FOR RESPONSE
-        List<User> foundUsers = users.getContent();
-        return scimService.usersToListResponse(
-            foundUsers, scimPageFilter.getStartIndex(), scimPageFilter.getCount()
-        );
+
+
+        //THIS IS THE LINE TO DELETE
+        return new ScimListResponse();
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public @ResponseBody ScimUser createUser(@RequestBody ScimUser scimUser) {
+        User newUser = scimService.scimUserToUser(scimUser);
+        userRepository.save(newUser);
+        return scimService.userToScimOktaIceUser(newUser);
     }
 
     @PutMapping("/{uuid}")

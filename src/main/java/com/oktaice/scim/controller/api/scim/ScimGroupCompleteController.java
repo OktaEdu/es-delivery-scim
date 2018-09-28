@@ -57,14 +57,6 @@ public class ScimGroupCompleteController extends ScimBaseController {
         logger.info("Using ScimGroupCompleteController...");
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public @ResponseBody ScimGroup createGroup(@RequestBody ScimGroup scimGroup) {
-        Group newGroup = scimService.scimGroupToGroup(scimGroup);
-        groupRepository.save(newGroup);
-        return scimService.groupToScimGroup(newGroup);
-    }
-
     @GetMapping("/{uuid}")
     public ScimGroup getGroup(@PathVariable String uuid) {
         Group group = groupRepository.findOneByUuid(uuid);
@@ -107,6 +99,14 @@ public class ScimGroupCompleteController extends ScimBaseController {
         return scimService.groupsToListResponse(
             groupsFound, scimPageFilter.getStartIndex(), scimPageFilter.getCount()
         );
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public @ResponseBody ScimGroup createGroup(@RequestBody ScimGroup scimGroup) {
+        Group newGroup = scimService.scimGroupToGroup(scimGroup);
+        groupRepository.save(newGroup);
+        return scimService.groupToScimGroup(newGroup);
     }
 
     @PutMapping("/{uuid}")
