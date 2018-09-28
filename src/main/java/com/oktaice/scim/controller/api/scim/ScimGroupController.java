@@ -57,21 +57,15 @@ public class ScimGroupController extends ScimBaseController {
         logger.info("Using ScimGroupController...");
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public @ResponseBody ScimGroup createGroup(@RequestBody ScimGroup scimGroup) {
-        Group newGroup = scimService.scimGroupToGroup(scimGroup);
-        groupRepository.save(newGroup);
-        return scimService.groupToScimGroup(newGroup);
-    }
 
     @GetMapping("/{uuid}")
     public ScimGroup getGroup(@PathVariable String uuid) {
-        Group group = groupRepository.findOneByUuid(uuid);
-        if (group == null) {
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
-        }
-        return scimService.groupToScimGroup(group);
+        //THIS IS THE LINE TO DELETE
+        return new ScimGroup();
+        //SEARCHES A GROUP BY ITS UUID
+
+        //RETURNS THE GROUP INFORMATION AND CONVERT IT TO A SCIM GROUP
+
     }
 
     @GetMapping
@@ -103,10 +97,18 @@ public class ScimGroupController extends ScimBaseController {
         }
 
         //GET LIST OF GROUPS FROM SEARCH AND CONVERT TO SCIM FOR RESPONSE
-        List<Group> groupsFound = groups.getContent();
-        return scimService.groupsToListResponse(
-            groupsFound, scimPageFilter.getStartIndex(), scimPageFilter.getCount()
-        );
+
+
+        //THIS IS THE LINE TO DELETE
+        return new ScimListResponse();
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public @ResponseBody ScimGroup createGroup(@RequestBody ScimGroup scimGroup) {
+        Group newGroup = scimService.scimGroupToGroup(scimGroup);
+        groupRepository.save(newGroup);
+        return scimService.groupToScimGroup(newGroup);
     }
 
     @PutMapping("/{uuid}")

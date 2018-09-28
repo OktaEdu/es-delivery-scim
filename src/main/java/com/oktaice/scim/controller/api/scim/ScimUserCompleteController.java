@@ -51,14 +51,6 @@ public class ScimUserCompleteController extends ScimBaseController {
         logger.info("Using ScimUserCompleteController...");
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public @ResponseBody ScimUser createUser(@RequestBody ScimUser scimUser) {
-        User newUser = scimService.scimUserToUser(scimUser);
-        userRepository.save(newUser);
-        return scimService.userToScimOktaIceUser(newUser);
-    }
-
     @GetMapping("/{uuid}")
     public @ResponseBody ScimOktaIceUser getUser(@PathVariable String uuid) {
         User user = userRepository.findOneByUuid(uuid);
@@ -108,6 +100,15 @@ public class ScimUserCompleteController extends ScimBaseController {
             foundUsers, scimPageFilter.getStartIndex(), scimPageFilter.getCount()
         );
     }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public @ResponseBody ScimUser createUser(@RequestBody ScimUser scimUser) {
+        User newUser = scimService.scimUserToUser(scimUser);
+        userRepository.save(newUser);
+        return scimService.userToScimOktaIceUser(newUser);
+    }
+
 
     @PutMapping("/{uuid}")
     public @ResponseBody ScimOktaIceUser replaceUser(@RequestBody ScimUser scimUser, @PathVariable String uuid) {
