@@ -51,13 +51,16 @@ public class ScimUserController extends ScimBaseController {
         logger.info("Using ScimUserController...");
     }
 
+    /**
+     * TODO: Implement the getUser method
+     */
     @GetMapping("/{uuid}")
     public @ResponseBody ScimOktaIceUser getUser(@PathVariable String uuid) {
-        //THIS IS THE LINE TO DELETE
+        //This is the line to delete
         return new ScimOktaIceUser();
-        //SEARCHES A USER BY ITS UUID
+        //Searches a Repository User by its uuid
 
-        //RETURNS THE USER INFORMATION AND CONVERT IT TO A SCIM USER
+        //Returns the Repository User and convert it to a SCIM User.
 
     }
 
@@ -95,34 +98,57 @@ public class ScimUserController extends ScimBaseController {
             //IF THERE'S NO FILTER, FIND ALL ENTRIES
             users = userRepository.findAll(pageRequest);
         }
-        //GET LIST OF USERS FROM SEARCH AND CONVERT TO SCIM FOR RESPONSE
+
+        /**
+         * TODO: Complete the getUsers method
+         */
+        //Get a list of Repository Users from search and convert to a SCIM List Response
 
 
-        //THIS IS THE LINE TO DELETE
+        //This is the line to delete
         return new ScimListResponse();
     }
 
+    /**
+     * TODO: Implement the createUser method
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody ScimUser createUser(@RequestBody ScimUser scimUser) {
-        User newUser = scimService.scimUserToUser(scimUser);
-        userRepository.save(newUser);
-        return scimService.userToScimOktaIceUser(newUser);
+        //This is the line to delete
+        return new ScimOktaIceUser();
+        //Get new user's information
+
+        //Save new user to DB
+
+        //Returns the user information and convert it to a SCIM User
+
     }
 
+    /**
+     * TODO: Implement the replaceUser method
+     */
     @PutMapping("/{uuid}")
     public @ResponseBody ScimOktaIceUser replaceUser(@RequestBody ScimUser scimUser, @PathVariable String uuid) {
-        User user = userRepository.findOneByUuid(uuid);
-        if (user == null) {
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
-        }
+        //This is the line to delete
+        return new ScimOktaIceUser();
 
-        User userWithUpdates = scimService.scimUserToUser(scimUser);
-        copyUser(userWithUpdates, user);
-        userRepository.save(user);
-        return scimService.userToScimOktaIceUser(user);
+        //Finds the Repository User by uuid
+
+        //Convert the SCIM User to a Repository User format if an existing Repository User can be found.
+
+        //Copy attribute values from userWithUpdates to the existing Repository User
+
+        //Save the updated value to DB
+
+        //Return the updated user information and convert it to a SCIM User
+
     }
 
+    /**
+     * The copyUser method takes in two Repository Users.
+     * It copy information from the first Repository User (from) to the second Repository User (to)
+     */
     private void copyUser(User from, User to) {
         Assert.notNull(from, "From User cannot be null");
         Assert.notNull(to, "To User cannot be null");
@@ -142,30 +168,34 @@ public class ScimUserController extends ScimBaseController {
         to.setFavoriteIceCream(from.getFavoriteIceCream());
     }
 
+    /**
+     * TODO: Implement the updateUser method
+     */
     @SuppressWarnings("unchecked")
     @PatchMapping("/{uuid}")
     public @ResponseBody ScimOktaIceUser updateUser(
         @RequestBody ScimUserPatchOp scimUserPatchOp, @PathVariable String uuid
     ) {
-        //CONFIRM THAT THE PATCHOP IS VALID
-        scimService.validateUserPatchOp(scimUserPatchOp);
+        //This is the line to delete
+        return new ScimOktaIceUser();
 
-        //FIND USER FOR UPDATE
-        User user = userRepository.findOneByUuid(uuid);
-        if (user == null) {
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
-        }
+        //Confirm that the ScimUserPatchOp is valid.
+
+        //Finds the Repository User by uuid
+
+        //If cannot find the user, returns "Resource not found" error message.
+
 
         // Do Patch Op (only active flag supported currently)
-        boolean activeReplace = scimUserPatchOp.getOperations().get(0).getValue().getActive();
-        if (activeReplace != user.getActive()) {
-            user.setActive(activeReplace);
-            userRepository.save(user);
-        }
 
-        return scimService.userToScimOktaIceUser(user);
+
+        //Return the updated user information and convert it to a SCIM User
+
     }
 
+    /**
+     * TODO: Review the deleteUser method
+     */
     @DeleteMapping("/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable String uuid) {

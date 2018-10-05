@@ -49,7 +49,7 @@ public class ScimGroupController extends ScimBaseController {
     ScimService scimService;
 
     public ScimGroupController(
-        GroupRepository groupRepository, UserRepository userRepository, ScimService scimService
+            GroupRepository groupRepository, UserRepository userRepository, ScimService scimService
     ) {
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
@@ -57,19 +57,22 @@ public class ScimGroupController extends ScimBaseController {
         logger.info("Using ScimGroupController...");
     }
 
-
+    /**
+     * TODO: Implement the getGroup method
+     */
     @GetMapping("/{uuid}")
     public ScimGroup getGroup(@PathVariable String uuid) {
-        //THIS IS THE LINE TO DELETE
+        //This is the line to delete
         return new ScimGroup();
-        //SEARCHES A GROUP BY ITS UUID
+        //Searches a Repository Group by its uuid
 
-        //RETURNS THE GROUP INFORMATION AND CONVERT IT TO A SCIM GROUP
+        //Returns the Repository Group and convert it to a SCIM Group.
 
     }
 
     @GetMapping
-    public @ResponseBody ScimListResponse getGroups(@ModelAttribute ScimPageFilter scimPageFilter) {
+    public @ResponseBody
+    ScimListResponse getGroups(@ModelAttribute ScimPageFilter scimPageFilter) {
         //GET STARTINDEX AND COUNT FOR PAGINATION
         PageRequest pageRequest = new PageRequest(scimPageFilter.getStartIndex() - 1, scimPageFilter.getCount());
 
@@ -96,34 +99,59 @@ public class ScimGroupController extends ScimBaseController {
             groups = groupRepository.findAll(pageRequest);
         }
 
-        //GET LIST OF GROUPS FROM SEARCH AND CONVERT TO SCIM FOR RESPONSE
+        /**
+         * TODO: Complete the getGroups method
+         */
+        //Get a list of Repository Groups from search and convert to a SCIM List Response
 
 
-        //THIS IS THE LINE TO DELETE
+        //This is the line to delete
         return new ScimListResponse();
     }
 
+    /**
+     * TODO: Implement the createGroup method
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public @ResponseBody ScimGroup createGroup(@RequestBody ScimGroup scimGroup) {
-        Group newGroup = scimService.scimGroupToGroup(scimGroup);
-        groupRepository.save(newGroup);
-        return scimService.groupToScimGroup(newGroup);
+    public @ResponseBody
+    ScimGroup createGroup(@RequestBody ScimGroup scimGroup) {
+        //This is the line to delete
+        return new ScimGroup();
+        //Get new group's information
+
+        ///Save new group to DB
+
+        //Returns the group information and convert it to a SCIM Group
+
     }
 
+    /**
+     * TODO: Implement the replaceGroup method
+     */
     @PutMapping("/{uuid}")
-    public @ResponseBody ScimGroup replaceGroup(@RequestBody ScimGroup scimGroup, @PathVariable String uuid) {
-        Group group = groupRepository.findOneByUuid(uuid);
-        if (group == null) {
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
-        }
+    public @ResponseBody
+    ScimGroup replaceGroup(@RequestBody ScimGroup scimGroup, @PathVariable String uuid) {
+        //This is the line to delete
+        return new ScimGroup();
+        //Finds the Repository Group by uuid
 
-        Group groupWithUpdates = scimService.scimGroupToGroup(scimGroup);
-        copyGroup(groupWithUpdates, group);
-        groupRepository.save(group);
-        return scimService.groupToScimGroup(group);
+        //Convert the SCIM Group to a Repository Group format if an existing Repository Group can be found.
+
+
+
+        //Copy attribute values from groupWithUpdates to the existing Repository Group
+
+        //Save the updated value to DB
+
+        //Return the updated group information and convert it to a SCIM Group
+
     }
 
+    /**
+     * The copyGroup method takes in two Repository Groups.
+     * It copy information from the first Repository Group (from) to the second Repository Group (to)
+     */
     private void copyGroup(Group from, Group to) {
         Assert.notNull(from, "From Group cannot be null");
         Assert.notNull(to, "To Group cannot be null");
@@ -132,23 +160,33 @@ public class ScimGroupController extends ScimBaseController {
         to.setUsers(from.getUsers());
     }
 
+    /**
+     * TODO: Implement the updateGroup method
+     */
     @PatchMapping("/{uuid}")
-    public @ResponseBody ScimGroup updateGroup(
-        @RequestBody ScimGroupPatchOp scimGroupPatchOp, @PathVariable String uuid
+    public @ResponseBody
+    ScimGroup updateGroup(
+            @RequestBody ScimGroupPatchOp scimGroupPatchOp, @PathVariable String uuid
     ) {
-        //CONFIRM THAT THE PATCHOP IS VALID
-        scimService.validateGroupPatchOp(scimGroupPatchOp);
+        //This is the line to delete
+        return new ScimGroup();
+        //Confirm that the ScimGroupPatchOp is valid.
 
-        Group group = groupRepository.findOneByUuid(uuid);
-        if (group == null) {
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Resource not found");
-        }
+        //Finds the Repository Group by uuid
 
-        scimService.updateGroupByPatchOp(group, scimGroupPatchOp);
-        groupRepository.save(group);
-        return scimService.groupToScimGroup(group);
+        //If cannot find the group, returns "Resource not found" error message.
+
+        //Update group with PatchOp
+
+        //Save the updated value to DB
+
+        //Return the updated group information and convert it to a SCIM Group
+
     }
 
+    /**
+     * TODO: Review the deleteGroup method
+     */
     @DeleteMapping("/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteGroup(@PathVariable String uuid) {

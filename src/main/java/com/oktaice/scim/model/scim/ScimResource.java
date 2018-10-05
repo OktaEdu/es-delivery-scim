@@ -9,6 +9,10 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ScimResource {
 
+    /**
+     * The ScimResource class serves as the base class for all SCIM classes.
+     * It contains the SCHEMA_BASE string to store the components used in every SCIM schema.
+     */
     public static final String SCHEMA_BASE = "urn:ietf:params:scim:schemas";
 
     private List<String> schemas = new ArrayList<>();
@@ -47,6 +51,10 @@ public class ScimResource {
         schemas.add(schema);
     }
 
+
+    /**
+     * The ScimResource class stores metadata that will be used in the SCIM User and SCIM Group schemas.
+     */
     public static class Meta {
 
         public static final String RESOURCE_TYPE_USER = "User";

@@ -8,6 +8,10 @@ import java.util.List;
 @JsonPropertyOrder({ "schemas", "id", "active", "userName", "name", "emails", "groups", "meta" })
 public class ScimUser extends ScimResource {
 
+    /**
+     * The ScimUser class extends ScimResource class.
+     * It contains the SCHEMA_USER_CORE string to store the Core Schema.
+     */
     public static final String SCHEMA_USER_CORE = SCHEMA_BASE + ":core:2.0:User";
 
     private boolean active;
