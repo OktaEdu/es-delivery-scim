@@ -94,7 +94,7 @@ public class ScimUserCompleteController extends ScimBaseController {
             //IF THERE'S NO FILTER, FIND ALL ENTRIES
             users = userRepository.findAll(pageRequest);
         }
-        //GET LIST OF USERS FROM SEARCH AND CONVERT TO SCIM FOR RESPONSE
+        //Get a list of Repository Users from search and convert to a SCIM List Response
         List<User> foundUsers = users.getContent();
         return scimService.usersToListResponse(
             foundUsers, scimPageFilter.getStartIndex(), scimPageFilter.getCount()
@@ -143,9 +143,9 @@ public class ScimUserCompleteController extends ScimBaseController {
     }
 
     @SuppressWarnings("unchecked")
-    @PatchMapping("/{uuid}")
+      @PatchMapping("/{uuid}")
     public @ResponseBody ScimOktaIceUser updateUser(
-        @RequestBody ScimUserPatchOp scimUserPatchOp, @PathVariable String uuid
+            @RequestBody ScimUserPatchOp scimUserPatchOp, @PathVariable String uuid
     ) {
         //CONFIRM THAT THE PATCHOP IS VALID
         scimService.validateUserPatchOp(scimUserPatchOp);

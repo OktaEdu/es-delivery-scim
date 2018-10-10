@@ -9,6 +9,10 @@ import static com.oktaice.scim.model.scim.ScimEnterpriseUser.SCHEMA_USER_ENTERPR
 @JsonPropertyOrder({ "schemas", "id", "active", "userName", "name", "emails", "groups", SCHEMA_USER_ENTERPRISE, "meta" })
 public class ScimEnterpriseUser extends ScimUser {
 
+    /**
+     * The ScimEnterpriseUser class extends ScimUser class.
+     * It contains the SCHEMA_USER_ENTERPRISE string to store the SCIM Enterprise User Schema.
+     */
     public static final String SCHEMA_USER_ENTERPRISE = SCHEMA_BASE + ":extension:enterprise:2.0:User";
 
     @JsonInclude(JsonInclude.Include.NON_NULL)

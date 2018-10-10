@@ -7,6 +7,10 @@ import java.util.List;
 
 public class ScimUserPatchOp extends ScimPatchOp {
 
+    /**
+     * The body of an HTTP PATCH request MUST contain the attribute "Operations",
+     * whose value is an array of one or more PATCH operations.
+     */
     @JsonProperty("Operations")
     List<Operation> operations = new ArrayList<>();
 
@@ -23,6 +27,10 @@ public class ScimUserPatchOp extends ScimPatchOp {
         this.operations = operations;
     }
 
+    /**
+     * The Operation object contains the string attribute op,
+     * and the value attribute that currently only used to set the active status for a user.
+     */
     public static class Operation {
 
         private String op;

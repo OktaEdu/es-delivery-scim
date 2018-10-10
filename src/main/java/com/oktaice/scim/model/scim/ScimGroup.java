@@ -5,9 +5,15 @@ import java.util.List;
 
 public class ScimGroup extends ScimResource {
 
+    /**
+     * The ScimGroup class extends ScimResource class.
+     * It contains the GROUP_SCHEMA string to store the group Core Schema.
+     */
     public static final String GROUP_SCHEMA = SCHEMA_BASE + ":core:2.0:Group";
 
     private String displayName;
+
+    //The Member class is unique to SCIM Groups.
     private List<Member> members = new ArrayList<>();
 
     public ScimGroup() {

@@ -11,6 +11,10 @@ import java.util.Map;
 
 public class ScimGroupPatchOp extends ScimPatchOp {
 
+    /**
+     * The body of an HTTP PATCH request MUST contain the attribute "Operations",
+     * whose value is an array of one or more PATCH operations.
+     */
     @JsonProperty("Operations")
     private List<Operation> operations = new ArrayList<>();
 
@@ -27,6 +31,12 @@ public class ScimGroupPatchOp extends ScimPatchOp {
         this.operations = operations;
     }
 
+    /**
+     * The Operation object contains six attributes.
+     * The string attribute op, and the value attribute is similar to ScimUserPatchOp.
+     * You modify the memberValues to make change of group members,
+     * and modify the groupValue to make change to the group itself.
+     */
     public static class Operation {
 
         private String op;

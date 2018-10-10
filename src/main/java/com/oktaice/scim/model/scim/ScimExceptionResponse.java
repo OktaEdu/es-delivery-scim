@@ -2,6 +2,7 @@ package com.oktaice.scim.model.scim;
 
 public class ScimExceptionResponse extends ScimResource {
 
+    //The ScimExceptionResponse objects has its own SCIM schema, with the identifier 'Error'
     public final static String ERROR_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:Error";
 
     private String detail;

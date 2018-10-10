@@ -10,6 +10,10 @@ import static com.oktaice.scim.model.scim.ScimOktaIceUser.SCHEMA_USER_OKTA_ICE;
 @JsonPropertyOrder({ "schemas", "id", "active", "userName", "name", "emails", "groups", SCHEMA_USER_ENTERPRISE, SCHEMA_USER_OKTA_ICE, "meta" })
 public class ScimOktaIceUser extends ScimEnterpriseUser {
 
+    /**
+     *  The ScimOktaIceUser class extends ScimEnterpriseUser class.
+     *  It contains the SCHEMA_USER_OKTA_ICE string to store the custom schema for ICE Research.
+     */
     public static final String SCHEMA_USER_OKTA_ICE = SCHEMA_BASE + ":extension:ice:2.0:User";
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
