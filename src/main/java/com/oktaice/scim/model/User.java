@@ -27,7 +27,7 @@ public class User {
     private String favoriteIceCream;
     private String employeeNumber;
     private String costCenter;
-    private List<Group> groups;
+    private List<Group> groups = new ArrayList<>();
     //END: USER ATTRIBUTES
 
     //BEGIN: CONSTRUCTORS

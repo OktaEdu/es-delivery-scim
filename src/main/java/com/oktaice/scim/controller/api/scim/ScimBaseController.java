@@ -1,6 +1,6 @@
-package com.oktaice.scim.controller.api;
+package com.oktaice.scim.controller.api.scim;
 
-import com.oktaice.scim.model.ScimExceptionResponse;
+import com.oktaice.scim.model.scim.ScimExceptionResponse;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
@@ -24,6 +24,20 @@ import java.io.IOException;
 public class ScimBaseController {
 
     /**
+     * TODO: Review the handleException method
+     * Handle exceptions in SCIM format
+     */
+    @ExceptionHandler(Exception.class)
+    public ScimExceptionResponse handleException(Exception e, HttpServletResponse response) {
+        HttpStatus responseStatus = HttpStatus.NOT_ACCEPTABLE;
+        if (e instanceof HttpStatusCodeException) {
+            responseStatus = ((HttpStatusCodeException) e).getStatusCode();
+        }
+        response.setStatus(responseStatus.value());
+        return new ScimExceptionResponse(e.getMessage(), responseStatus.toString());
+    }
+
+    /**
      * Return the features supported by the ICE Research SCIM API.
      * i.e.: The ICE Research API supports patchop, but does not support bulk operations.
      */
@@ -38,7 +52,7 @@ public class ScimBaseController {
     @GetMapping(value = "ResourceTypes")
     public ResponseEntity<InputStreamResource> getResourceTypes() throws IOException {
         return getResourceJsonFile("/scim-json/ResourceTypes.json");
-    }//getResourceTypes
+    }
 
     /**
      * Return the SCIM schemas supported by ICE Research
@@ -46,20 +60,7 @@ public class ScimBaseController {
     @GetMapping(value = "Schemas")
     public ResponseEntity<InputStreamResource> getSchemas() throws IOException {
         return getResourceJsonFile("/scim-json/Schemas.json");
-    }//getSchemas
-
-    /**
-     * Handle exceptions in SCIM format
-     */
-    @ExceptionHandler(Exception.class)
-    public ScimExceptionResponse handleException(Exception e, HttpServletResponse response) {
-        HttpStatus responseStatus = HttpStatus.NOT_ACCEPTABLE;
-        if (e instanceof HttpStatusCodeException) {
-            responseStatus = ((HttpStatusCodeException) e).getStatusCode();
-        }
-        response.setStatus(responseStatus.value());
-        return new ScimExceptionResponse(e.getMessage(), responseStatus.toString());
-    }//handleException
+    }
 
     /**
      * Helper method that read JSON files for the configuration endpoints
@@ -72,6 +73,6 @@ public class ScimBaseController {
                 .contentLength(jsonFile.contentLength())
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new InputStreamResource(jsonFile.getInputStream()));
-    }//getResourceJsonFile
+    }
 }
 

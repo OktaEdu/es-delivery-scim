@@ -1,0 +1,927 @@
+{
+	"info": {
+		"_postman_id": "cff1612f-1f85-4cbb-a97a-04e7b8e3c388",
+		"name": "SCIM",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "SCIM_Users",
+			"item": [
+				{
+					"name": "SCIM: Get All Users",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{adminid}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{adminpw}}",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic c2VydmljZUFjY291bnQ6VHJhIW5tZTQzMjE="
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/scim/v2/Users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"scim",
+								"v2",
+								"Users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SCIM: Get Users with Search Filter",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{adminid}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{adminpw}}",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic c2VydmljZUFjY291bnQ6VHJhIW5tZTQzMjE="
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/scim/v2/Users?filter=familyName eq \"Doe\"",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"scim",
+								"v2",
+								"Users"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "familyName eq \"Doe\""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SCIM: Get Users with Page",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{adminid}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{adminpw}}",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic c2VydmljZUFjY291bnQ6VHJhIW5tZTQzMjE="
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/scim/v2/Users?count=100&startIndex=1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"scim",
+								"v2",
+								"Users"
+							],
+							"query": [
+								{
+									"key": "count",
+									"value": "100"
+								},
+								{
+									"key": "startIndex",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SCIM: Get User",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{adminid}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{adminpw}}",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic c2VydmljZUFjY291bnQ6VHJhIW5tZTQzMjE="
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/scim/v2/Users/{{user_uuid}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"scim",
+								"v2",
+								"Users",
+								"{{user_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SCIM: Create User",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{adminid}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{adminpw}}",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic c2VydmljZUFjY291bnQ6VHJhIW5tZTQzMjE="
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"schemas\":[\n\t\t\"urn:ietf:params:scim:schemas:core:2.0:User\",\n\t\t\"urn:ietf:params:scim:schemas:extension:ice:2.0:User\",\n\t\t\"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User\"\n\t],\n\t\"userName\":\"jack.bailey@oktaice.local\",\n\t\"name\":{\n\t\t\"givenName\":\"Jack\",\n\t\t\"familyName\":\"Bailey\"\n\t},\n\t\"emails\":[{\n\t\t\"primary\":true,\n\t\t\"value\":\"jack.bailey@oktaice.com\",\n\t\t\"type\":\"work\"\n\t}],\n\t\"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User\":{\n\t\t\"employeeNumber\":\"ABC124\",\n\t\t\"costCenter\":\"US_RD\"\n\t},\n\t\"urn:ietf:params:scim:schemas:extension:ice:2.0:User\":{\n\t\t\"iceCream\":\"Chocolate\"\n\t},\n\t\"active\":true\n}"
+						},
+						"url": {
+							"raw": "{{url}}/scim/v2/Users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"scim",
+								"v2",
+								"Users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SCIM: Replace User",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{adminid}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{adminpw}}",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic c2VydmljZUFjY291bnQ6VHJhIW5tZTQzMjE="
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"schemas\":[\n\t\t\"urn:ietf:params:scim:schemas:core:2.0:User\",\n\t\t\"urn:ietf:params:scim:schemas:extension:ice:2.0:User\",\n\t\t\"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User\"\n\t],\n\t\"userName\":\"jack.married@oktaice.local\",\n\t\"name\":{\n\t\t\"givenName\":\"Jack\",\n\t\t\"familyName\":\"Married\"\n\t},\n\t\"emails\":[{\n\t\t\"primary\":true,\n\t\t\"value\":\"jack.married@oktaice.com\",\n\t\t\"type\":\"work\"\n\t}],\n\t\"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User\":{\n\t\t\"employeeNumber\":\"ABD124\",\n\t\t\"costCenter\":\"US_RD2\"\n\t},\n\t\"urn:ietf:params:scim:schemas:extension:ice:2.0:User\":{\n\t\t\"iceCream\":\"Vanilla\"\n\t},\n\t\"active\":true\n}"
+						},
+						"url": {
+							"raw": "{{url}}/scim/v2/Users/{{user_uuid}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"scim",
+								"v2",
+								"Users",
+								"{{user_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SCIM: Deactivate User",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{adminid}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{adminpw}}",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic c2VydmljZUFjY291bnQ6VHJhIW5tZTQzMjE="
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"schemas\": [\"urn:ietf:params:scim:api:messages:2.0:PatchOp\"],\n\t\"Operations\":[\n\t\t{\n\t\t\t\"op\":\"replace\",\n\t\t\t\"value\":{\n\t\t\t\t\"active\": false\n\t\t\t}\n\t\t}\n\t]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/scim/v2/Users/{{user_uuid}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"scim",
+								"v2",
+								"Users",
+								"{{user_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SCIM: Delete User",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{adminid}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{adminpw}}",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic c2VydmljZUFjY291bnQ6VHJhIW5tZTQzMjE="
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/scim/v2/Users/{{user_uuid}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"scim",
+								"v2",
+								"Users",
+								"{{user_uuid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SCIM_Groups",
+			"item": [
+				{
+					"name": "SCIM: Get All Groups",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{adminid}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{adminpw}}",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic c2VydmljZUFjY291bnQ6VHJhIW5tZTQzMjE="
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/scim/v2/Groups",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"scim",
+								"v2",
+								"Groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SCIM: Get Groups with Search Filter",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{adminid}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{adminpw}}",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic c2VydmljZUFjY291bnQ6VHJhIW5tZTQzMjE="
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/scim/v2/Groups?filter=displayName eq \"Technical Researcher\"",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"scim",
+								"v2",
+								"Groups"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "displayName eq \"Technical Researcher\""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SCIM: Get Groups with Page",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{adminid}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{adminpw}}",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic c2VydmljZUFjY291bnQ6VHJhIW5tZTQzMjE="
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/scim/v2/Groups?count=100&startIndex=1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"scim",
+								"v2",
+								"Groups"
+							],
+							"query": [
+								{
+									"key": "count",
+									"value": "100"
+								},
+								{
+									"key": "startIndex",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SCIM: Get Group",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{adminid}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{adminpw}}",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic c2VydmljZUFjY291bnQ6VHJhIW5tZTQzMjE="
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/scim/v2/Groups/{{group_uuid}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"scim",
+								"v2",
+								"Groups",
+								"{{group_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SCIM: Create Group",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{adminid}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{adminpw}}",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic c2VydmljZUFjY291bnQ6VHJhIW5tZTQzMjE="
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schemas\": [ \"urn:ietf:params:scim:schemas:core:2.0:Group\" ],\n    \"displayName\": \"ALL USERS\",\n    \"members\": [\n        {\n            \"display\": \"john.lindrik@oktaice.com\",\n            \"value\": \"ce58fe63-2eaa-45e7-97da-5bbdf87ce607\"\n        },\n        {\n            \"display\": \"jane.doe@oktaice.com\",\n            \"value\": \"d0e07f41-e8bf-43e5-b70c-a4cdde92ddc6\"\n        },\n        {\n            \"display\": \"mark.rover@oktaice.com\",\n            \"value\": \"05eb86c8-34c8-449f-b09a-453b7ea42e9c\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/scim/v2/Groups",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"scim",
+								"v2",
+								"Groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SCIM: Replace Group",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{adminid}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{adminpw}}",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic c2VydmljZUFjY291bnQ6VHJhIW5tZTQzMjE="
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schemas\": [\n        \"urn:ietf:params:scim:schemas:core:2.0:Group\"\n    ],\n    \n    \"displayName\": \"French Vanilla\"\n  \n}"
+						},
+						"url": {
+							"raw": "{{url}}/scim/v2/Groups/{{group_uuid}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"scim",
+								"v2",
+								"Groups",
+								"{{group_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SCIM: Update Group",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{adminpw}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{adminid}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"schemas\": [\"urn:ietf:params:scim:api:messages:2.0:PatchOp\"],\r\n\t\"Operations\": [{\r\n\t\t\"op\": \"replace\",\r\n\t\t\"value\": {\r\n\t\t\t\"id\": \"4c913b85-9b9b-487f-b4e4-e529318ae751\",\r\n\t\t\t\"displayName\": \"Technical Researchers\"\r\n\t\t}\r\n\t}]\r\n}"
+						},
+						"url": {
+							"raw": "{{url}}/scim/v2/Groups/{{group_uuid}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"scim",
+								"v2",
+								"Groups",
+								"{{group_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SCIM: Delete Group",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{adminid}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{adminpw}}",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic c2VydmljZUFjY291bnQ6VHJhIW5tZTQzMjE="
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/scim/v2/Groups/{{group_uuid}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"scim",
+								"v2",
+								"Groups",
+								"{{group_uuid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

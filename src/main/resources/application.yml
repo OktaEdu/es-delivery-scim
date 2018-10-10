@@ -12,5 +12,7 @@ spring:
   jpa:
     hibernate.ddl-auto: validate
     show-sql: true
+scim:
+  service: wip
 logging.level.com.oktaice.scim: DEBUG
 spring.mvc.dispatch-options-request: true

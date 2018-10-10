@@ -15,15 +15,16 @@ public class Group {
     private int id;
     private String uuid;
     private String displayName;
-    private List<User> users;
+    private List<User> users = new ArrayList<>();
     //END: GROUP ATTRIBUTES
 
     //BEGIN: CONSTRUCTORS
     public Group(){
+        this.uuid = UUID.randomUUID().toString();
     }
 
     public Group(String displayName, List<User> users){
-        this.uuid = UUID.randomUUID().toString();
+        this();
         this.displayName = displayName;
         this.users = users;
     }//Group
